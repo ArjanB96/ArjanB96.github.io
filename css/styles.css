@@ -10923,9 +10923,12 @@ textarea.form-control-lg {
 
 /* Additional styling for the Instagram logo */
 .social-icon {
+  width: 100%;
   max-width: 24px; /* Adjust the size of the Instagram logo */
+  height: auto;
+  display: inline-block;
   vertical-align: middle; /* Center the logo vertically */
-  margin-right: 5px; /* Add some spacing between the logo and text */
+  margin-right: 0px; /* Add some spacing between the logo and text */
 }
 
 /* CSS for hover effect */
@@ -10948,4 +10951,19 @@ textarea.form-control-lg {
 .card.card-gradient:hover {
   background-image: linear-gradient(to right, #F85C64, #6854A4); /* Your new gradient colors on hover */
   color: white;
+}
+
+/* Style for the image zoom effect */
+.img-container {
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.img-container img {
+  transition: transform 0.5s; /* Adding a transition for a smooth effect */
+}
+
+/* Image zoom effect on hover */
+.img-container:hover img {
+  transform: scale(1.5); /* Increase the scale on hover (1.1 times larger) */
 }
