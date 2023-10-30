@@ -10941,3 +10941,11 @@ textarea.form-control-lg {
   opacity: 0;
   transition: opacity 0.5s; /* Adjust the transition duration as needed */
 }
+
+/* Define the gradient styles for hover */
+
+
+.card.card-gradient:hover {
+  background-image: linear-gradient(to right, #F85C64, #6854A4); /* Your new gradient colors on hover */
+  color: white;
+}

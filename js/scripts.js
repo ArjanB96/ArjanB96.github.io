@@ -3,4 +3,3 @@ $(document).ready(function () {
         $(".hamburger-button").toggleClass("navbar-toggler-icon-active");
     });
 });
-
