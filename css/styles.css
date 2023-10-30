@@ -10948,8 +10948,8 @@ textarea.form-control-lg {
 /* Define the gradient styles for hover */
 
 
-.card.card-gradient:hover {
-  background-image: linear-gradient(to right, #F85C64, #6854A4); /* Your new gradient colors on hover */
+.card.card-gradient:hover { 
+  background-image: linear-gradient(to right, #6854A4, #F85C64); /* Your new gradient colors on hover */
   color: white;
 }
 
@@ -10966,4 +10966,83 @@ textarea.form-control-lg {
 /* Image zoom effect on hover */
 .img-container:hover img {
   transform: scale(1.5); /* Increase the scale on hover (1.1 times larger) */
+}
+
+/* CSS for the loading overlay and animation */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to right, #6854A4, #F85C64);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+/* Add CSS to style the custom loader image and trail */
+.custom-loader-container {
+  position: relative;
+  width: 100px; /* Width of the slak image */
+}
+
+.custom-loader {
+  max-width: 100%;
+  position: absolute;
+  bottom: 0; /* Position slak at the bottom */
+  animation: moveSnail 3s linear infinite;
+}
+
+.trail {
+  position: absolute;
+  width: 0;
+  height: 3px;
+  background: #FFD700; /* Color of the snail trail */
+  bottom: 0; /* Position trail at the bottom */
+  transform-origin: left center;
+  animation: moveTrail 3s linear infinite;
+}
+
+@keyframes moveSnail {
+  0% {
+      left: 0;
+  }
+  25% {
+      left: 50px; /* Adjust the distance for the snail */
+  }
+  50% {
+      left: 100px; /* Adjust the distance for the snail */
+  }
+  100% {
+      left: 200px; /* Adjust the final position */
+  }
+}
+
+@keyframes moveTrail {
+  0% {
+      transform: scaleX(1);
+  }
+  25% {
+      transform: scaleX(1); /* Trail length as the snail moves */
+      width: 50px; /* Trail length as the snail moves */
+  }
+  50% {
+      transform: scaleX(1);
+      width: 100px; /* Trail length as the snail moves */
+  }
+  100% {
+      transform: scaleX(1);
+      width: 200px; /* Adjust to match the final position */
+  }
 }
