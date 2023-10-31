@@ -10,3 +10,4 @@ window.onload = function() {
         document.querySelector('.loading-overlay').style.display = 'none';
     }, 1000); // Hide after 1 second (1000 milliseconds)
 };
+
