@@ -10959,14 +10959,6 @@ textarea.form-control-lg {
   border-radius: 10px;
 }
 
-.img-container img {
-  transition: transform 0.5s; /* Adding a transition for a smooth effect */
-}
-
-/* Image zoom effect on hover */
-.img-container:hover img {
-  transform: scale(1.5); /* Increase the scale on hover (1.1 times larger) */
-}
 
 /* CSS for the loading overlay and animation */
 .loading-overlay {
