@@ -4,10 +4,9 @@ $(document).ready(function () {
     });
 });
 
-// Function to hide the loading overlay after 3 seconds
+// Function to hide the loading overlay after 1 second
 window.onload = function() {
     setTimeout(function() {
         document.querySelector('.loading-overlay').style.display = 'none';
     }, 1000); // Hide after 1 second (1000 milliseconds)
 };
-
