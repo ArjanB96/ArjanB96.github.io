@@ -10918,18 +10918,17 @@ textarea.form-control-lg {
 }
 
 .instagram-button {
-  font-size: 14px; /* Adjust the font size to make the button smaller */
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Additional styling for the Instagram logo */
 .social-icon {
-  width: 100%;
-  max-width: 24px; /* Adjust the size of the Instagram logo */
+  max-width: 24px;
   height: auto;
-  display: inline-block;
-  vertical-align: middle; /* Center the logo vertically */
-  margin-right: 0px; /* Add some spacing between the logo and text */
 }
+
 
 /* CSS for hover effect */
 .card {
