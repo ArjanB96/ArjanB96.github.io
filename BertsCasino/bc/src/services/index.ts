@@ -9,11 +9,11 @@ export const resetState = (s: Saved): Saved => ({ ...s, balance: START, history:
 // Spraak (Web Speech API). Later vervangbaar door audiobestanden.
 const LINES: Record<string, string[]> = {
   welcome: ['Awoo strijder! Kom maar met je saaf, a neef!', 'Bert ruikt geld! Welkom in BertsCasino!'],
-  idle: ['Kom op, die roulette gaat niet vanzelf draaien!', 'Niet zo gierig doen, gooi er nog wat op!', 'Pikkie, ik word er oud van hier!'],
+  idle: ['Kom op, die roulette gaat niet vanzelf draaien!', 'Niet zo gierig doen, gooi er nog wat op!', 'Pikkie, ik word tantoe ongeduldig, heb een peki op mij wachten.!'],
   big: ['Oeeeeh, dat is een flinke, pikkie!', 'Bert gaat lekker vandaag! Gooi maar door!'],
-  close: ['De inzetten zijn gesloten boys, groetjes Bert!'],
+  close: ['De inzetten zijn gesloten boys, groetjes Bert!', 'Inzetten zijn gesloten. De poenie van je ma niet gelukkig.'],
   win: ['Oeeeeh, dat wordt vanavond bori roken!', 'Lekker bezig, pikkie!', 'Siii maatje!'],
-  lose: ['Helaas pindakaas, vriend!', 'Welloe voor jou swa!', 'Het huis wint, a neef. Weer eens wat anders!'],
+  lose: ['Helaas pindakaas, vriend!', 'Welloe voor jou swa!', 'Het huis wint, a neef!', 'Binnenkort kan Bert een nieuwe rolie kopen s/o naar jou bro'],
   broke: ['Niks meer over? Reset maar, Bert gunt je.']
 }
 /** Stem van Bert: pitch 0–2 (lager = zwaarder), rate 0.1–10 (lager = trager) */
