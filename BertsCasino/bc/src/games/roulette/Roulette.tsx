@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import Bert, { Mood } from '../../components/Bert'
+import { Mood } from '../../components/Bert'
+import SeatedBert from '../../components/Throne'
 import Wheel from './Wheel'
 import { Bet, WHEEL, buildTargets, colorOf, payout, spinResult } from './logic'
-import { START, line, load, resetState, save, speak } from '../../services'
+import { DRINKS, START, line, load, resetState, save, speak } from '../../services'
 
 const CHIPS = [1, 5, 10, 25, 50, 100, 500]
 /** Balletje: baan langs de rand, straal van de vakjes, vluchttijd uit Berts mond en rol-/stuitertijd (ms) */
@@ -106,9 +107,9 @@ export default function Roulette({ onExit }: { onExit: () => void }) {
   const eur = (n: number) => '€' + n.toLocaleString('nl-NL')
   return (
     <div className="room">
-      <header className="bar"><button className="btn" onClick={onExit}>← Foyer</button><b className="gold">Saldo {eur(free)}</b>
-        <button className="btn" onClick={() => setSpeech(!speech)}>{speech ? '🔊 Bert praat' : '🔇 Stil'}</button><button className="btn" onClick={reset}>Reset</button></header>
-      <div className="stage" ref={stage}><Bert mood={mood} talking={talk} said={said} /><Wheel {...anim} /></div>
+      <header className="bar"><button className="btn" onClick={onExit}>← Beginscherm</button><b className="gold">{init.name && <span className="who">{DRINKS[init.drink || 'bier'].icon} {init.name} · </span>}Saldo {eur(free)}</b>
+        <button className="btn" onClick={() => setSpeech(!speech)}>{speech ? '🤐 Laat Bert zijn bek houden' : '🔊 Luister naar Bert zijn stem'}</button><button className="btn" onClick={reset}>Reset</button></header>
+      <div className="stage" ref={stage}><SeatedBert mood={mood} talking={talk} said={said} /><Wheel {...anim} /></div>
       {fly && <span className="spit" style={{ left: fly.x, top: fly.y, width: fly.s, height: fly.s }} />}
       <div className="info"><span>Totale inzet: <b>{eur(total)}</b></span>
         {res !== null && <span className={`res ${colorOf(res)}`}>{res}</span>}

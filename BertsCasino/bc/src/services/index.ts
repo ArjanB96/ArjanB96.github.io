@@ -1,30 +1,38 @@
 const K = 'bc.v1'
-export interface Saved { balance: number; sound: boolean; speech: boolean; history: number[] }
+export interface Saved { balance: number; sound: boolean; speech: boolean; history: number[]; name?: string; drink?: DrinkId }
+/** Drankjes die je bij Bert kunt bestellen */
+export const DRINKS = { hennessy: { icon: '🥃', label: 'glaasje Hennessy' }, bier: { icon: '🍺', label: 'biertje' }, redbull: { icon: '⚡', label: 'red bulletje' } }
+export type DrinkId = keyof typeof DRINKS
 export const START = 1000
 export const load = (): Saved => { try { return { balance: START, sound: true, speech: true, history: [], ...JSON.parse(localStorage.getItem(K) || '{}') } } catch { return { balance: START, sound: true, speech: true, history: [] } } }
-export const save = (s: Saved) => { try { localStorage.setItem(K, JSON.stringify(s)) } catch {} }
+export const save = (s: Partial<Saved>) => { try { localStorage.setItem(K, JSON.stringify({ ...load(), ...s })) } catch {} }
 /** Reset-regels op één plek aanpasbaar */
 export const resetState = (s: Saved): Saved => ({ ...s, balance: START, history: [] })
 
 // Spraak (Web Speech API). Later vervangbaar door audiobestanden.
 const LINES: Record<string, string[]> = {
-  welcome: ['Awoo strijder! Kom maar met je saaf, a neef!', 'Bert ruikt geld! Welkom in BertsCasino!'],
-  idle: ['Kom op, die roulette gaat niet vanzelf draaien!', 'Niet zo gierig doen, gooi er nog wat op!', 'Pikkie, ik word tantoe ongeduldig, heb een peki op mij wachten.!'],
-  big: ['Oeeeeh, dat is een flinke, pikkie!', 'Bert gaat lekker vandaag! Gooi maar door!'],
+  welcome: ['Awoo strijder! Kom maar met je saaf, a neef!', 'Bert ruikt geld! Welkom in BertsCasino!', 'Daar is {naam}! Proost met je {drankje}!'],
+  idle: ['Kom op, die roulette gaat niet vanzelf draaien!', 'Niet zo gierig doen, gooi er nog wat op!', 'Pikkie, ik word tantoe ongeduldig, heb een peki op mij wachten.!', 'Nog een {drankje}, {naam}? Dan gaat het vanzelf beter.', '{naam}, zit je te slapen of ga je nog inzetten?'],
+  big: ['Oeeeeh, dat is een flinke, pikkie!', 'Bert gaat lekker vandaag! Gooi maar door!', 'Kijk {naam} nou gaan! Groot geld!'],
   close: ['De inzetten zijn gesloten boys, groetjes Bert!', 'Inzetten zijn gesloten. De poenie van je ma niet gelukkig.'],
-  win: ['Oeeeeh, dat wordt vanavond bori roken!', 'Lekker bezig, pikkie!', 'Siii maatje!'],
-  lose: ['Helaas pindakaas, vriend!', 'Welloe voor jou swa!', 'Het huis wint, a neef!', 'Binnenkort kan Bert een nieuwe rolie kopen s/o naar jou bro'],
+  win: ['Oeeeeh, dat wordt vanavond bori roken!', 'Lekker bezig, pikkie!', 'Siii maatje!', 'Lekker {naam}! Die {drankje} doet wonderen.'],
+  lose: ['Helaas pindakaas, vriend!', 'Welloe voor jou swa!', 'Het huis wint, a neef!', 'Binnenkort kan Bert een nieuwe rolie kopen s/o naar jou bro', 'Sorry {naam}, het huis wint. Drink je {drankje} maar op.'],
+  ask: ['Faka broer, wat is je naam ook alweer?'],
+  lady: ['Bert heeft echt een hele domme bana!'],
   broke: ['Niks meer over? Reset maar, Bert gunt je.']
 }
 /** Stem van Bert: pitch 0–2 (lager = zwaarder), rate 0.1–10 (lager = trager) */
 const VOICE = { pitch: 0.35, rate: 0.8 }
-export const line =(k: string) => { const a = LINES[k]; return a[Math.floor(Math.random() * a.length)] }
-export function speak(text: string, on: boolean) {
+/** Stem van de dames in de kamer van Bert */
+export const LADY = { pitch: 1.5, rate: 1.05 }
+export const line = (k: string) => { const a = LINES[k], s = load(); return a[Math.floor(Math.random() * a.length)].replace(/\{naam\}/g, s.name || 'a neef').replace(/\{drankje\}/g, DRINKS[s.drink || 'bier'].label) }
+/** queue = niet onderbreken wat er nu gezegd wordt, maar erachteraan */
+export function speak(text: string, on: boolean, voice = VOICE, queue = false) {
   if (!on || !('speechSynthesis' in window)) return
-  try { speechSynthesis.cancel(); const v = speechSynthesis.getVoices().find(x => x.lang.startsWith('nl'))
+  try { if (!queue) speechSynthesis.cancel(); const v = speechSynthesis.getVoices().find(x => x.lang.startsWith('nl'))
     // Oude-mannenstem: zwaar en wat trager. Faalt een stem op de lage toon, dan nog een keer met de standaardstem
     const say = (t: string, pitch: number, rate: number, retry = true) => { const u = new SpeechSynthesisUtterance(t); u.lang = 'nl-NL'; u.pitch = pitch; u.rate = rate; if (v) u.voice = v
       u.onerror = e => { if (retry && e.error !== 'interrupted' && e.error !== 'canceled') say(t, 1, 1, false) }; speechSynthesis.speak(u) }
     // Chrome slaat speak() soms over als die direct na cancel() komt
-    setTimeout(() => { say(text, VOICE.pitch, VOICE.rate) }, 60) } catch {}
+    setTimeout(() => { say(text, voice.pitch, voice.rate) }, queue ? 0 : 60) } catch {}
 }
