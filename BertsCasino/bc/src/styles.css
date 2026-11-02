@@ -36,3 +36,6 @@ body{background:radial-gradient(circle at 50% 0,#5a0f1c,#1a0509 70%),repeating-r
 .player .label{display:none}.player .play{width:100%;min-height:72px;font-size:1.6rem;font-weight:700;border-width:2px;border-radius:14px;box-shadow:0 0 18px #d4a01766}}
 /* Homepage: tekstballon tussen logo en Bert in plaats van eroverheen */
 .home .bert{margin-top:18px}.home .bubble{position:relative;bottom:auto;left:auto;transform:none;margin:0 auto 12px;max-width:100%}
+/* Bert spuugt het balletje naar het wiel */
+.m-spit .head{transform:translateY(5px) scale(1.07);transition:transform .15s}.m-spit .mouth{rx:9px}
+.spit{position:fixed;z-index:20;pointer-events:none;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,#e8e8e8 60%,#999);box-shadow:0 6px 8px #0007}

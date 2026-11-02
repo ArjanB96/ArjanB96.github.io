@@ -1,4 +1,4 @@
-export type Mood = 'idle' | 'win' | 'lose' | 'wow' | 'spin'
+export type Mood = 'idle' | 'win' | 'lose' | 'wow' | 'spin' | 'spit'
 export default function Bert({ mood, talking, said }: { mood: Mood; talking: boolean; said: string }) {
   return (
     <div className={`bert m-${mood}`}>
@@ -16,7 +16,7 @@ export default function Bert({ mood, talking, said }: { mood: Mood; talking: boo
           <path d="M62 95 Q64 150 110 156 Q156 150 158 95 Q150 118 110 120 Q70 118 62 95Z" fill="#c9c9cf"/>
           <path d="M88 122 Q110 112 132 122" stroke="#aaa" strokeWidth="8" fill="none" strokeLinecap="round"/>
           <g className="shades"><rect x="68" y="68" width="38" height="24" rx="8" fill="#111"/><rect x="114" y="68" width="38" height="24" rx="8" fill="#111"/><path d="M106 76h8" stroke="url(#g)" strokeWidth="3"/><rect x="72" y="71" width="12" height="4" rx="2" fill="#fff" opacity=".4"/></g>
-          <ellipse className="mouth" cx="110" cy="130" rx="11" ry={talking ? 6 : mood === 'win' ? 7 : 2.5} fill="#3a0b12"/>
+          <ellipse className="mouth" cx="110" cy="130" rx="11" ry={mood === 'spit' ? 10 : talking ? 6 : mood === 'win' ? 7 : 2.5} fill="#3a0b12"/>
           <path d="M104 100 Q110 108 116 100" stroke="#b8845c" strokeWidth="3" fill="none"/>
         </g>
         <g className="arm"><path d="M170 175 Q205 160 198 120" stroke="#5a0f1c" strokeWidth="26" fill="none" strokeLinecap="round"/><circle cx="198" cy="112" r="13" fill="#e0b088"/><circle cx="196" cy="112" r="5" fill="url(#g)"/>

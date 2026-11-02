@@ -5,6 +5,17 @@ import { Bet, WHEEL, buildTargets, colorOf, payout, spinResult } from './logic'
 import { START, line, load, resetState, save, speak } from '../../services'
 
 const CHIPS = [1, 5, 10, 25, 50, 100, 500]
+/** Balletje: baan langs de rand, straal van de vakjes, vluchttijd uit Berts mond en rol-/stuitertijd (ms) */
+const S = 360 / 37, TRACK = 176, POCKET = 121, FLY = 900, ROLL = 9000
+let ac: AudioContext | null = null
+/** Korte synthgeluidjes: 'spit' (ptoe!) en 'tik' (balletje op een vakje) */
+function sfx(kind: 'spit' | 'tik', on: boolean, vol = 1) {
+  if (!on) return
+  try { ac ??= new AudioContext(); const t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain()
+    if (kind === 'spit') { o.type = 'sine'; o.frequency.setValueAtTime(420, t); o.frequency.exponentialRampToValueAtTime(70, t + 0.15); g.gain.setValueAtTime(0.35, t) }
+    else { o.type = 'square'; o.frequency.value = 2200 + Math.random() * 1400; g.gain.setValueAtTime(0.12 * vol, t) }
+    g.gain.exponentialRampToValueAtTime(0.001, t + (kind === 'spit' ? 0.18 : 0.04)); o.connect(g).connect(ac.destination); o.start(t); o.stop(t + 0.2) } catch {}
+}
 export default function Roulette({ onExit }: { onExit: () => void }) {
   const init = useMemo(load, [])
   const [bal, setBal] = useState(init.balance), [hist, setHist] = useState<number[]>(init.history), [speech, setSpeech] = useState(init.speech)
@@ -12,7 +23,8 @@ export default function Roulette({ onExit }: { onExit: () => void }) {
   const [last, setLast] = useState<Bet[]>([]), [erase, setErase] = useState(false), [busy, setBusy] = useState(false)
   const [res, setRes] = useState<number | null>(null), [net, setNet] = useState<number | null>(null)
   const [mood, setMood] = useState<Mood>('idle'), [said, setSaid] = useState(''), [talk, setTalk] = useState(false)
-  const [anim, setAnim] = useState({ deg: 0, ball: 0, r: 175 })
+  const [anim, setAnim] = useState<{ deg: number; ball: number | null; r: number }>({ deg: 0, ball: null, r: TRACK })
+  const [fly, setFly] = useState<{ x: number; y: number; s: number } | null>(null), stage = useRef<HTMLDivElement>(null)
   const deg0 = useRef(0), idle = useRef(0)
   const targets = useMemo(buildTargets, [])
   const total = Object.values(bets).reduce((s, b) => s + b.amount, 0)
@@ -44,18 +56,50 @@ export default function Roulette({ onExit }: { onExit: () => void }) {
   const spin = () => {
     if (busy || total === 0) return say('Eerst een inzet, pikkie!')
     const result = spinResult(), placed = Object.values(bets), idx = WHEEL.indexOf(result)
+    const mouth = stage.current?.querySelector('.bert svg')?.getBoundingClientRect(), wr = stage.current?.querySelector('.wheel')?.getBoundingClientRect()
+    if (!mouth || !wr) return
     setBusy(true); setRes(null); setNet(null); say(line('close'), 'spin')
-    const w0 = deg0.current, W = 1080 + Math.random() * 360, T = 7000, st = performance.now()
+    // Schermposities: Berts mond en het punt op de baan dat naar Bert toe wijst
+    const k = wr.width / 400, cx = wr.left + wr.width / 2, cy = wr.top + wr.height / 2
+    const mx = mouth.left + (mouth.width * 110) / 220, my = mouth.top + (mouth.height * 130) / 280
+    const a0 = (Math.atan2(mx - cx, cy - my) * 180) / Math.PI, rad = (a0 * Math.PI) / 180
+    const lx = cx + TRACK * k * Math.sin(rad), ly = cy - TRACK * k * Math.cos(rad)
+    // Tijdlijn (ms): wiel draait aan, Bert spuugt, balletje rolt uit
+    const T0 = 700, TL = T0 + FLY, TE = TL + ROLL, w0 = deg0.current, W = 900 + Math.random() * 360
+    const rotor = (ms: number) => w0 + W * (1 - Math.pow(1 - Math.min(1, ms / TE), 2))
+    // Aantal extra rondjes zó gekozen dat het balletje begint waar Bert het neerlegt en eindigt in het uitkomstvak
+    const K = 360 * 8 + (((a0 - rotor(TL) - idx * S) % 360) + 360) % 360
+    const st = performance.now(); let phase = 0, hop = -1
     const tick = (now: number) => {
-      const t = Math.min(1, (now - st) / T), e = 1 - Math.pow(1 - t, 3), deg = w0 + W * e
-      const ball = deg + idx * (360 / 37) - (1 - e) * 360 * 7
-      const settle = Math.max(0, (t - 0.6) / 0.4), r = 175 - 49 * Math.min(1, t / 0.7) * 0 - (175 - 128) * Math.pow(settle, 0.6) + Math.sin(settle * 40) * 8 * (1 - settle)
-      setAnim({ deg, ball, r })
-      if (t < 1) return requestAnimationFrame(tick)
-      deg0.current = deg % 360
-      const back = placed.reduce((s, b) => s + payout(b, result), 0), n = back - total, nb = bal + n
-      setBal(nb); setRes(result); setNet(n); setHist(h => [result, ...h].slice(0, 15)); setLast(placed); setBets({}); setStack([]); setBusy(false)
-      say(n > 0 ? line('win') : nb < 1 ? line('broke') : line('lose'), n > 0 ? 'win' : n < 0 ? 'lose' : 'idle')
+      const ms = now - st, deg = rotor(ms)
+      if (ms < T0) setAnim({ deg, ball: null, r: TRACK })
+      else if (ms < TL) {
+        if (phase === 0) { phase = 1; setMood('spit'); sfx('spit', speech) }
+        const u = (ms - T0) / FLY
+        setFly({ x: mx + (lx - mx) * u, y: my + (ly - my) * u - 90 * 4 * u * (1 - u), s: 6 + (12 * k - 6) * u })
+        setAnim({ deg, ball: null, r: TRACK })
+      } else {
+        if (phase === 1) { phase = 2; setFly(null); setMood('spin') }
+        const t = Math.min(1, (ms - TL) / ROLL)
+        let off = K * Math.pow(1 - t, 2.5), r
+        if (t < 0.62) r = TRACK + Math.sin(t * 60) * 1.2
+        else if (t < 0.74) { const v = (t - 0.62) / 0.12; r = TRACK - (TRACK - POCKET) * v * v }
+        else { // stuiteren over de vakjes tot het balletje stil ligt
+          const u = (t - 0.74) / 0.26, b = Math.floor(u * 5)
+          r = POCKET + 20 * Math.abs(Math.sin(u * Math.PI * 5)) * Math.pow(1 - u, 1.6)
+          off += S * 1.6 * Math.sin(u * Math.PI * 5) * Math.pow(1 - u, 2)
+          if (b > hop && b < 5) { hop = b; sfx('tik', speech, 1 - u) }
+        }
+        setAnim({ deg, ball: deg + idx * S + off, r })
+        if (t >= 1) {
+          deg0.current = deg % 360
+          const back = placed.reduce((s, b) => s + payout(b, result), 0), n = back - total, nb = bal + n
+          setBal(nb); setRes(result); setNet(n); setHist(h => [result, ...h].slice(0, 15)); setLast(placed); setBets({}); setStack([]); setBusy(false)
+          say(n > 0 ? line('win') : nb < 1 ? line('broke') : line('lose'), n > 0 ? 'win' : n < 0 ? 'lose' : 'idle')
+          return
+        }
+      }
+      requestAnimationFrame(tick)
     }
     requestAnimationFrame(tick)
   }
@@ -64,7 +108,8 @@ export default function Roulette({ onExit }: { onExit: () => void }) {
     <div className="room">
       <header className="bar"><button className="btn" onClick={onExit}>← Foyer</button><b className="gold">Saldo {eur(free)}</b>
         <button className="btn" onClick={() => setSpeech(!speech)}>{speech ? '🔊 Bert praat' : '🔇 Stil'}</button><button className="btn" onClick={reset}>Reset</button></header>
-      <div className="stage"><Bert mood={mood} talking={talk} said={said} /><Wheel {...anim} /></div>
+      <div className="stage" ref={stage}><Bert mood={mood} talking={talk} said={said} /><Wheel {...anim} /></div>
+      {fly && <span className="spit" style={{ left: fly.x, top: fly.y, width: fly.s, height: fly.s }} />}
       <div className="info"><span>Totale inzet: <b>{eur(total)}</b></span>
         {res !== null && <span className={`res ${colorOf(res)}`}>{res}</span>}
         {net !== null && <span className={net >= 0 ? 'plus' : 'min'}>{net >= 0 ? '+' : ''}{eur(net)}</span>}</div>
