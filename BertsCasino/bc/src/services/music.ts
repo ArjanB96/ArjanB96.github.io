@@ -77,3 +77,18 @@ export function doorSound(delay = 0.4, len = 2) {
     ns.connect(nf).connect(ng).connect(ac.destination); ns.start(b)
   } catch {}
 }
+
+/** Korte synthgeluidjes: 'spit' (ptoe!), 'tik' (balletje/symbool valt), 'pop' (cluster weg) en 'boom' (dynamiet) */
+export function sfx(kind: 'spit' | 'tik' | 'pop' | 'boom', on: boolean, vol = 1) {
+  if (!on) return
+  try { ac ??= new AudioContext(); const t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain()
+    if (kind === 'spit') { o.type = 'sine'; o.frequency.setValueAtTime(420, t); o.frequency.exponentialRampToValueAtTime(70, t + 0.15); g.gain.setValueAtTime(0.35, t) }
+    else if (kind === 'pop') { o.type = 'triangle'; o.frequency.setValueAtTime(500, t); o.frequency.exponentialRampToValueAtTime(1600, t + 0.12); g.gain.setValueAtTime(0.25 * vol, t) }
+    else if (kind === 'boom') { o.type = 'sine'; o.frequency.setValueAtTime(120, t); o.frequency.exponentialRampToValueAtTime(30, t + 0.5); g.gain.setValueAtTime(0.9, t)
+      const n = ac.createBuffer(1, ac.sampleRate * 0.5, ac.sampleRate), d = n.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2)
+      const ns = ac.createBufferSource(), nf = ac.createBiquadFilter(), ng = ac.createGain(); ns.buffer = n; nf.type = 'lowpass'; nf.frequency.value = 900; ng.gain.value = 0.8
+      ns.connect(nf).connect(ng).connect(ac.destination); ns.start(t) }
+    else { o.type = 'square'; o.frequency.value = 2200 + Math.random() * 1400; g.gain.setValueAtTime(0.12 * vol, t) }
+    const len = kind === 'boom' ? 0.6 : kind === 'spit' ? 0.18 : kind === 'pop' ? 0.14 : 0.04
+    g.gain.exponentialRampToValueAtTime(0.001, t + len); o.connect(g).connect(ac.destination); o.start(t); o.stop(t + len + 0.05) } catch {}
+}

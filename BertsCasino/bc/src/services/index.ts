@@ -20,6 +20,11 @@ const LINES: Record<string, string[]> = {
   ask: ['Faka broer, wat is je naam ook alweer?'],
   lady: ['Bert heeft echt een hele domme bana!'],
   serve: ['Hihi, alsjeblieft schatje! Bert zegt dat ik er ghb in moest doen.'],
+  kluisWelcome: ['Welkom bij Berts Kluis, {naam}! Blaas die kluis open!', 'Ewa {naam}, de kluis zit vol poen. Even kraken?'],
+  kluisWin: ['Kassa, {naam}!', 'Die zit, pikkie!', 'Lekker kraken zo!'],
+  kluisBig: ['Oeeeeh, {naam} plundert de kluis!', 'Wat een buit! Bert wordt er bang van!'],
+  overval: ['DE OVERVAL! Maskers op, {naam}!', 'Alarm uit, deur open. Pak alles!'],
+  boom: ['BOEM! Hahaha!', 'Daar gaat de muur!'],
   broke: ['Niks meer over? Reset maar, Bert gunt je.']
 }
 /** Stem van Bert: pitch 0–2 (lager = zwaarder), rate 0.1–10 (lager = trager) */

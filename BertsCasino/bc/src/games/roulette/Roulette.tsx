@@ -4,19 +4,11 @@ import SeatedBert from '../../components/Throne'
 import Wheel from './Wheel'
 import { Bet, WHEEL, buildTargets, colorOf, payout, spinResult } from './logic'
 import { DRINKS, START, line, load, resetState, save, speak } from '../../services'
+import { sfx } from '../../services/music'
 
 const CHIPS = [1, 5, 10, 25, 50, 100, 500]
 /** Balletje: baan langs de rand, straal van de vakjes, vluchttijd uit Berts mond en rol-/stuitertijd (ms) */
 const S = 360 / 37, TRACK = 176, POCKET = 121, FLY = 900, ROLL = 9000
-let ac: AudioContext | null = null
-/** Korte synthgeluidjes: 'spit' (ptoe!) en 'tik' (balletje op een vakje) */
-function sfx(kind: 'spit' | 'tik', on: boolean, vol = 1) {
-  if (!on) return
-  try { ac ??= new AudioContext(); const t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain()
-    if (kind === 'spit') { o.type = 'sine'; o.frequency.setValueAtTime(420, t); o.frequency.exponentialRampToValueAtTime(70, t + 0.15); g.gain.setValueAtTime(0.35, t) }
-    else { o.type = 'square'; o.frequency.value = 2200 + Math.random() * 1400; g.gain.setValueAtTime(0.12 * vol, t) }
-    g.gain.exponentialRampToValueAtTime(0.001, t + (kind === 'spit' ? 0.18 : 0.04)); o.connect(g).connect(ac.destination); o.start(t); o.stop(t + 0.2) } catch {}
-}
 export default function Roulette({ onExit }: { onExit: () => void }) {
   const init = useMemo(load, [])
   const [bal, setBal] = useState(init.balance), [hist, setHist] = useState<number[]>(init.history), [speech, setSpeech] = useState(init.speech)

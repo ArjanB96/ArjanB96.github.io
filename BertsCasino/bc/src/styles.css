@@ -107,3 +107,27 @@ body{background:#1a0509}
 @keyframes fetchstep{to{transform:translateY(-3%) rotate(-2deg)}}
 .hold{position:absolute;right:-4%;top:36%;font-size:calc(var(--u)*4);z-index:3;animation:fin .3s;filter:drop-shadow(0 3px 4px #000a)}
 @media(max-width:600px){.sbar{width:calc(var(--u)*13)}@keyframes fetchdrink{0%{transform:none}35%,60%{transform:translateX(calc(var(--u)*-12))}100%{transform:none}}}
+/* Berts Kluis */
+.game.on{opacity:1;cursor:pointer;font:inherit;color:#ffe9a8;border-style:solid;background:linear-gradient(#7a1426,#3d0813);box-shadow:0 0 16px #d4a01755;animation:pulse 2s infinite}.game.on small{color:#fff2a8}
+.ktitle{font-size:clamp(1.8rem,6vw,3rem);margin:.3em 0 0}.kstage{align-items:center;margin-top:24px;gap:24px}
+.kwrap{width:min(440px,92vw)}
+.kgrid{position:relative;display:grid;grid-template-columns:repeat(6,1fr);gap:4px;aspect-ratio:1;padding:8px;overflow:hidden;border:6px solid #d4a017;border-radius:14px;
+  background:radial-gradient(circle,#2a0a0e,#0e0204);box-shadow:inset 0 0 30px #000,0 0 0 4px #3b1a0b,0 10px 30px #000c}
+.kc{display:grid;place-items:center;border-radius:8px;background:linear-gradient(#5a0f1c,#2a0610);box-shadow:inset 0 0 0 1px #d4a01755;font-size:clamp(20px,6vw,34px);line-height:1;
+  animation:kdrop .42s cubic-bezier(.3,1.35,.6,1) both}
+.kc.wild{background:linear-gradient(#f5d36a,#8a6508)}.kc.tnt{background:linear-gradient(#3a3a3a,#111)}
+.kc.glow{animation:kglow .3s ease-in-out infinite alternate;z-index:2}.kc.pop{animation:kpop .28s ease-in forwards}.kc.boom{animation:kboom .6s ease-out forwards}
+@keyframes kdrop{from{transform:translateY(calc(var(--f) * -110%))}}
+@keyframes kglow{from{box-shadow:inset 0 0 0 2px #fff2a8,0 0 8px #d4a017}to{box-shadow:inset 0 0 0 3px #fff,0 0 22px #ffd36a;transform:scale(1.08)}}
+@keyframes kpop{to{transform:scale(0) rotate(25deg);opacity:0}}
+@keyframes kboom{0%{background:#fff;box-shadow:0 0 30px #ffb000}40%{background:#ff6a00;transform:scale(1.15)}100%{transform:scale(0);opacity:0}}
+.kgrid.shake{animation:kshake .5s}@keyframes kshake{20%{transform:translate(-6px,3px)}40%{transform:translate(5px,-4px)}60%{transform:translate(-4px,2px)}80%{transform:translate(3px,-2px)}}
+.kbanner{position:absolute;inset:0;display:grid;place-items:center;z-index:5;background:#0009;font:700 clamp(2rem,9vw,3.6rem)/1 'Palatino Linotype',Georgia,serif;color:#ffd36a;text-shadow:0 0 20px #ff6a00,3px 3px #000;animation:fin .3s}
+.kmeter{position:relative;height:28px;margin-top:8px;border:2px solid #d4a017;border-radius:14px;background:#1a0509;overflow:hidden}
+.kmeter i{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,#7a5a05,#d4a017,#fff2a8);transition:width .35s}.kmeter span{position:relative;font-weight:700;font-size:.85rem;line-height:24px;color:#fff;text-shadow:1px 1px 2px #000}
+.kfree{margin-top:8px;padding:6px;border-radius:10px;background:#7a1426;border:2px solid #d4a017;font-weight:700;color:#fff2a8;animation:pulse 1.2s infinite}
+.kbet{min-width:110px;display:inline-block}.kspin{font-size:1.2rem;padding:12px 30px}
+.kinfo{max-width:620px;margin:10px auto;padding:12px 16px;text-align:left;background:#1a0509e6;border:1px solid #d4a017;border-radius:12px;font-size:.9rem}
+.kinfo table{width:100%;border-collapse:collapse;text-align:center}.kinfo td,.kinfo th{padding:3px;border-bottom:1px solid #d4a01744}
+@media(max-width:600px){.kstage .seat{--seat:min(170px,48vw)}}
+@media(prefers-reduced-motion:reduce){.kc,.kc.glow,.kgrid.shake{animation:none}}
