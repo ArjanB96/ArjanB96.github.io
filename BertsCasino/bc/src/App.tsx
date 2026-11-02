@@ -32,14 +32,14 @@ export default function App() {
   return (<>
     <Decor /><MusicToggle />
     <div className="home">
+      <AudioPlayer onPlay={() => setSaid('Ai boy, we zijn locked in. Kies een lauwe gimma uit en bonne chance!')} />
       <h1 className="logo">Berts<span>Casino</span></h1>
-      <SeatedBert mood="idle" talking={!!said} said={said || `Welkom, ${load().name || 'a neef'}! Bert ruikt geld!`} />
+      <SeatedBert mood="idle" talking={!!said} said={said || 'Luister ff de pokkoe van mijn Casino. De knop staat hierboven "Speel".'} />
       <button className="btn" onClick={() => { const t = line('welcome'); setSaid(t); speak(t, load().speech) }}>🎤 Laat Bert praten</button>
       <div className="games">{GAMES.map(g => g.ready
         ? <button key={g.id} className="game on" onClick={() => { location.hash = g.id }}><b>{g.name}</b><small>{g.sub}</small></button>
         : <div key={g.id} className="game off"><b>{g.name}</b><small>{g.sub}</small></div>)}</div>
       <HallOfFame me={load().name} />
-      <AudioPlayer />
       <p className="fine">Alleen virtueel speelgeld zonder echte waarde.</p>
     </div>
   </>)
