@@ -11,12 +11,12 @@ export const resetState = (s: Saved): Saved => ({ ...s, balance: START, history:
 
 // Spraak (Web Speech API). Later vervangbaar door audiobestanden.
 const LINES: Record<string, string[]> = {
-  welcome: ['Awoo strijder! Kom maar met je saaf, a neef!', 'Bert ruikt geld! Welkom in BertsCasino!', 'Daar is {naam}! Proost met je {drankje}!'],
-  idle: ['Kom op, die roulette gaat niet vanzelf draaien!', 'Niet zo gierig doen, gooi er nog wat op!', 'Pikkie, ik word tantoe ongeduldig, heb een peki op mij wachten.!', 'Nog een {drankje}, {naam}? Dan gaat het vanzelf beter.', '{naam}, zit je te slapen of ga je nog inzetten?'],
-  big: ['Oeeeeh, dat is een flinke, pikkie!', 'Bert gaat lekker vandaag! Gooi maar door!', 'Kijk {naam} nou gaan! Groot geld!'],
+  welcome: ['Awoo strijder! Kom maar met je saaf, a neef!', 'Bert ruikt geld! Welkom in BertsCasino!', 'Ewa {naam}! Proost met je {drankje} er zit een klein beetje ghb in!'],
+  idle: ['Kom op, die roulette gaat niet vanzelf draaien!', 'Niet zo skeer doen, gooi er nog wat op!', 'Pikkie, ik word tantoe ongeduldig, heb een peki op mij wachten.!', 'Nog een {drankje}, {naam}? Dan gaat het vanzelf beter.', '{naam}, zit je te slapen of ga je nog inzetten?'],
+  big: ['Oeeeeh, dat is een flinke, net je bana', 'Bert gaat dom vandaag! Gooi maar door!', 'Kijk {naam} nou gaan! Groot geld! Heb je net geoogst?'],
   close: ['De inzetten zijn gesloten boys, groetjes Bert!', 'Inzetten zijn gesloten. De poenie van je ma niet gelukkig.'],
-  win: ['Oeeeeh, dat wordt vanavond bori roken!', 'Lekker bezig, pikkie!', 'Siii maatje!', 'Lekker {naam}! Die {drankje} doet wonderen.'],
-  lose: ['Helaas pindakaas, vriend!', 'Welloe voor jou swa!', 'Het huis wint, a neef!', 'Binnenkort kan Bert een nieuwe rolie kopen s/o naar jou bro', 'Sorry {naam}, het huis wint. Drink je {drankje} maar op.'],
+  win: ['Oeeeeh, dat wordt vanavond bori roken!', 'Lekker bezig, pikkie!', 'Siiieee maatje!', 'Lekker {naam}! Dat {drankje} doet wonderen.'],
+  lose: ['Helaas pindakaas, vriend!', 'Welloe voor jou swa!', 'Het huis wint, a neef!', 'Binnenkort kan Bert een nieuwe rolie kopen s o naar jou bro', 'Sorry {naam}, het huis wint. Drink je {drankje} maar op.'],
   ask: ['Faka broer, wat is je naam ook alweer?'],
   lady: ['Bert heeft echt een hele domme bana!'],
   broke: ['Niks meer over? Reset maar, Bert gunt je.']
