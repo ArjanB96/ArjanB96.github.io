@@ -5,17 +5,19 @@ import Decor from './components/Decor'
 import MusicToggle from './components/MusicToggle'
 import Roulette from './games/roulette/Roulette'
 import Kluis from './games/kluis/Kluis'
+import SpaceRaiders from './games/spaceraiders/SpaceRaiders'
 import Entrance from './components/Entrance'
 import { line, speak, load } from './services'
 
 /** Nieuwe spellen toevoegen = één regel in deze lijst + eigen map in src/games/ */
-const GAMES = [{ id: 'roulette', name: 'Roulette', sub: 'Betreed de tafel', ready: true }, { id: 'kluis', name: '🧨 Berts Kluis', sub: 'Kraak de kluis', ready: true }, { id: 'blackjack', name: 'Blackjack', sub: 'Binnenkort', ready: false },
+const GAMES = [{ id: 'roulette', name: 'Roulette', sub: 'Betreed de tafel', ready: true }, { id: 'kluis', name: '🧨 Berts Kluis', sub: 'Kraak de kluis', ready: true }, { id: 'space', name: '🚀 Berts Space Raiders', sub: 'Lanceer de buit', ready: true }, { id: 'blackjack', name: 'Blackjack', sub: 'Binnenkort', ready: false },
   { id: 'poker', name: 'Poker', sub: 'Binnenkort', ready: false }, { id: 'more', name: 'Meer spellen', sub: 'Binnenkort', ready: false }]
 export default function App() {
   const [route, setRoute] = useState(location.hash.slice(1) || 'home'), [open, setOpen] = useState(false), [said, setSaid] = useState(''), [intro, setIntro] = useState(false)
   useEffect(() => { const f = () => { setRoute(location.hash.slice(1) || 'home'); setOpen(false) }; addEventListener('hashchange', f); return () => removeEventListener('hashchange', f) }, [])
   const enter = () => { setOpen(true); setIntro(true); setTimeout(() => { location.hash = 'roulette' }, 1600) }
   if (route === 'roulette' && intro) return <><MusicToggle /><Entrance onDone={() => setIntro(false)} /></>
+  if (route === 'space') return <><MusicToggle /><div className="fade"><SpaceRaiders onExit={() => { location.hash = 'home' }} /></div></>
   if (route === 'kluis') return <><Decor /><MusicToggle /><div className="fade"><Kluis onExit={() => { location.hash = 'home' }} /></div></>
   if (route === 'roulette') return <><Decor /><MusicToggle /><div className="fade"><Roulette onExit={() => { location.hash = 'home' }} /></div></>
   return (<>

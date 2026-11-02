@@ -25,6 +25,12 @@ const LINES: Record<string, string[]> = {
   kluisBig: ['Oeeeeh, {naam} plundert de kluis!', 'Wat een buit! Bert wordt er bang van!'],
   overval: ['DE OVERVAL! Maskers op, {naam}!', 'Alarm uit, deur open. Pak alles!'],
   boom: ['BOEM! Hahaha!', 'Daar gaat de muur!'],
+  spaceWelcome: ['We gaan de ruimte in, a neef!', 'Bert ruikt buitenaards geld!', 'Riemen vast, {naam}! Dit wordt een mooie vlucht!'],
+  spaceWin: ['Pak die buit!', 'Kijk eens wat daar binnenkomt!', 'Lekker geraid, {naam}!'],
+  spaceBig: ['Oeeeeh, buitenaardse poen! Bert wordt er duizelig van!', 'Dit wordt een mooie vlucht, a neef!'],
+  spaceLevel: ['Upgrade! Die bemanning gaat dom!', 'Kijk die bemanning gaan, {naam}!'],
+  spaceBonus: ['Kapitein Bert aan het roer! Ruimte-expeditie, {naam}!', 'Hyperspace aan, a neef! Pak alles wat los zit!'],
+  spaceFinale: ['Thuisvlucht! Tel die buit maar, a neef!', 'Bemanning, lever de buit af bij Bert!'],
   broke: ['Niks meer over? Reset maar, Bert gunt je.']
 }
 /** Stem van Bert: pitch 0–2 (lager = zwaarder), rate 0.1–10 (lager = trager) */

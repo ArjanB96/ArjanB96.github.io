@@ -78,8 +78,8 @@ export function doorSound(delay = 0.4, len = 2) {
   } catch {}
 }
 
-/** Korte synthgeluidjes: 'spit' (ptoe!), 'tik' (balletje/symbool valt), 'pop' (cluster weg) en 'boom' (dynamiet) */
-export function sfx(kind: 'spit' | 'tik' | 'pop' | 'boom', on: boolean, vol = 1) {
+/** Korte synthgeluidjes: 'spit' (ptoe!), 'tik' (balletje/symbool valt), 'pop' (cluster weg), 'boom' (dynamiet), 'zap' (laser), 'up' (upgrade) en 'coin' (prijs) */
+export function sfx(kind: 'spit' | 'tik' | 'pop' | 'boom' | 'zap' | 'up' | 'coin', on: boolean, vol = 1) {
   if (!on) return
   try { ac ??= new AudioContext(); const t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain()
     if (kind === 'spit') { o.type = 'sine'; o.frequency.setValueAtTime(420, t); o.frequency.exponentialRampToValueAtTime(70, t + 0.15); g.gain.setValueAtTime(0.35, t) }
@@ -88,7 +88,10 @@ export function sfx(kind: 'spit' | 'tik' | 'pop' | 'boom', on: boolean, vol = 1)
       const n = ac.createBuffer(1, ac.sampleRate * 0.5, ac.sampleRate), d = n.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2)
       const ns = ac.createBufferSource(), nf = ac.createBiquadFilter(), ng = ac.createGain(); ns.buffer = n; nf.type = 'lowpass'; nf.frequency.value = 900; ng.gain.value = 0.8
       ns.connect(nf).connect(ng).connect(ac.destination); ns.start(t) }
+    else if (kind === 'zap') { o.type = 'sawtooth'; o.frequency.setValueAtTime(1800, t); o.frequency.exponentialRampToValueAtTime(120, t + 0.35); g.gain.setValueAtTime(0.18 * vol, t) }
+    else if (kind === 'up') { o.type = 'triangle'; [0, 0.08, 0.16, 0.24].forEach((d, k) => o.frequency.setValueAtTime(523 * Math.pow(2, [0, 4, 7, 12][k] / 12), t + d)); g.gain.setValueAtTime(0.22 * vol, t) }
+    else if (kind === 'coin') { o.type = 'square'; o.frequency.setValueAtTime(988, t); o.frequency.setValueAtTime(1319, t + 0.08); g.gain.setValueAtTime(0.14 * vol, t) }
     else { o.type = 'square'; o.frequency.value = 2200 + Math.random() * 1400; g.gain.setValueAtTime(0.12 * vol, t) }
-    const len = kind === 'boom' ? 0.6 : kind === 'spit' ? 0.18 : kind === 'pop' ? 0.14 : 0.04
+    const len = kind === 'boom' ? 0.6 : kind === 'up' ? 0.45 : kind === 'zap' ? 0.38 : kind === 'coin' ? 0.35 : kind === 'spit' ? 0.18 : kind === 'pop' ? 0.14 : 0.04
     g.gain.exponentialRampToValueAtTime(0.001, t + len); o.connect(g).connect(ac.destination); o.start(t); o.stop(t + len + 0.05) } catch {}
 }
