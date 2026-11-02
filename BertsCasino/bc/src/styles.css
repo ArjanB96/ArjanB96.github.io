@@ -97,3 +97,13 @@ body{background:#1a0509}
 .who{color:#fff2a8}
 /* Mobiel: keuzes in de kamer van Bert boven de muziekknop houden */
 @media(max-width:600px){.entrance .ask,.entrance .go{bottom:calc(max(10px,env(safe-area-inset-bottom)) + 58px)}}
+/* Mobiel: naamveld bovenin (toetsenbord dekt het dan niet af), lichtere dames zonder dure schaduwfilter */
+.entrance{--u:min(.95vh,1vw);--u:min(.95svh,1vw)}
+@media(max-width:600px){.entrance .askname{top:calc(max(12px,env(safe-area-inset-top)) + 3.2rem);bottom:auto}.lady{filter:none}}
+/* Bar en het meisje dat je drankje haalt */
+.sbar{position:absolute;right:100%;bottom:0;width:calc(var(--u)*18);margin-right:calc(var(--u)*-1);filter:drop-shadow(0 8px 10px #000a)}
+.ladybox.fetch{animation:fetchdrink 3.4s ease-in-out forwards;z-index:2}.ladybox.fetch .lady{animation:fetchstep .3s ease-in-out 11 alternate}
+@keyframes fetchdrink{0%{transform:none}35%,60%{transform:translateX(calc(var(--u)*-17))}100%{transform:none}}
+@keyframes fetchstep{to{transform:translateY(-3%) rotate(-2deg)}}
+.hold{position:absolute;right:-4%;top:36%;font-size:calc(var(--u)*4);z-index:3;animation:fin .3s;filter:drop-shadow(0 3px 4px #000a)}
+@media(max-width:600px){.sbar{width:calc(var(--u)*13)}@keyframes fetchdrink{0%{transform:none}35%,60%{transform:translateX(calc(var(--u)*-12))}100%{transform:none}}}

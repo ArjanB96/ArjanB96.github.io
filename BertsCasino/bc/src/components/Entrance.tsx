@@ -6,15 +6,21 @@ import { DRINKS, DrinkId, LADY, line, load, save, speak } from '../services'
 import { doorSound } from '../services/music'
 
 /** Entree: grote deuren gaan open, je loopt de kamer van Bert in, daarna pas naar de tafel */
-const ARRIVE = 3600, LADY_AT = 4200
+const ARRIVE = 3600
+/** Na het kiezen van je drankje (ms): meisje loopt naar de bar, pakt het, komt terug; daarna de 'bana'-opmerking */
+const FETCH_AT = 1500, AT_BAR = 1200, BACK = 3400
+/** Leestijd van een tekstballon: giechel + ±75 ms per teken, met een pauze erna (PAUSE) */
+const PAUSE = 1500, readTime = (t: string) => 1200 + t.length * 75 + PAUSE
+const GIGGLE = { pitch: 1.9, rate: 1.35 }
 const S = 360 / 37, fill = { red: '#a5101f', black: '#111', green: '#0a7a3a' }
 
 const heart = (x: number, y: number, s = 1) => `M${x} ${y + 2 * s}c${-3 * s} ${-4 * s} ${-8 * s} 0 0 ${6 * s}c${8 * s} ${-6 * s} ${3 * s} ${-10 * s} 0 ${-6 * s}z`
 /** Verliefde dame in bikini; hoofd gekanteld richting Bert (flip = rechts van de troon) */
-function Lady({ suit, hair, skin, flip, delay, said }: { suit: string; hair: string; skin: string; flip?: boolean; delay: number; said?: string }) {
+function Lady({ suit, hair, skin, flip, delay, said, extra = '', hold }: { suit: string; hair: string; skin: string; flip?: boolean; delay: number; said?: string; extra?: string; hold?: string }) {
   return (
-    <div className="ladybox">
+    <div className={`ladybox ${extra}`}>
       {said && <div className="bubble">{said}</div>}
+      {hold && <span className="hold">{hold}</span>}
       <svg viewBox="0 0 120 300" className={flip ? 'lady flip' : 'lady'} style={{ animationDelay: `${delay}s` }} aria-hidden="true">
         <g className="hearts" fill="#ff2d6f">{[[30, 20, 0], [92, 8, 1.1], [64, -6, 2.2]].map(([x, y, d]) => <path key={x} d={heart(x, y, 1.4)} style={{ animationDelay: `${d + delay}s` }}/>)}</g>
         <ellipse cx="62" cy="56" rx="32" ry="40" fill={hair}/>
@@ -41,6 +47,22 @@ function Lady({ suit, hair, skin, flip, delay, said }: { suit: string; hair: str
   )
 }
 
+/** Bar links van de dames: toog met flessen, glazen en een biertap */
+function Bar() {
+  return (
+    <svg viewBox="0 0 180 200" className="sbar" aria-hidden="true">
+      <rect x="6" y="20" width="168" height="8" rx="2" fill="#d4a017"/><rect x="6" y="62" width="168" height="8" rx="2" fill="#d4a017"/>
+      {[['#3a1a06', 16], ['#0b5d2a', 38], ['#e8e2c8', 58], ['#7a1426', 80], ['#c9781a', 102], ['#2a4fa3', 124], ['#3a1a06', 146]].map(([c, x], i) =>
+        <g key={i}><rect x={+x} y={i % 2 ? -4 : -10} width="12" height={i % 2 ? 24 : 30} rx="4" fill={c as string} stroke="#fff3" /><rect x={+x + 4} y={i % 2 ? -10 : -16} width="4" height="8" fill={c as string}/></g>)}
+      {[20, 46, 72, 98, 124, 150].map(x => <path key={x} d={`M${x} 40h14l-3 22h-8z`} fill="#e9f6ff99" stroke="#fff8"/>)}
+      <rect y="96" width="180" height="8" fill="#d4a017"/>
+      <path d="M4 104 h172 l-6 96 h-160z" fill="#3b1a0b" stroke="#d4a017" strokeWidth="3"/>
+      {[30, 70, 110, 150].map(x => <rect key={x} x={x - 14} y="116" width="28" height="70" rx="4" fill="none" stroke="#d4a01788" strokeWidth="2"/>)}
+      <path d="M140 96 v-22 h10 v22" fill="#c9c9cf" stroke="#888"/><rect x="138" y="70" width="14" height="6" rx="2" fill="#d4a017"/>
+    </svg>
+  )
+}
+
 function Table() {
   return (
     <svg viewBox="0 0 800 220" className="etable" aria-hidden="true">
@@ -63,10 +85,26 @@ function Table() {
   )
 }
 
+/** Eigen state, zodat typen niet telkens de hele kamer opnieuw tekent (belangrijk op mobiel) */
+function NameForm({ onName }: { onName: (n: string) => void }) {
+  const [v, setV] = useState(() => load().name || '')
+  // Alleen met muis/trackpad direct focussen; op een telefoon zou het toetsenbord meteen de scène bedekken
+  const desk = typeof matchMedia !== 'undefined' && matchMedia('(pointer: fine)').matches
+  const submit = (e: FormEvent) => { e.preventDefault(); onName(v.trim().slice(0, 20)) }
+  return (
+    <form className="ask askname" onSubmit={submit}>
+      <input autoFocus={desk} maxLength={20} value={v} onChange={e => setV(e.target.value)} placeholder="Je naam" aria-label="Je naam"
+        autoCapitalize="words" autoComplete="nickname" autoCorrect="off" spellCheck={false} enterKeyHint="go"/>
+      <button className="btn spin">Dat ben ik</button>
+    </form>
+  )
+}
+
 export default function Entrance({ onDone }: { onDone: () => void }) {
   // Stappen: binnenlopen → naam → drankje → aan tafel
   const [step, setStep] = useState<'walk' | 'name' | 'drink' | 'done'>('walk'), [said, setSaid] = useState(''), [lady, setLady] = useState('')
-  const [name, setName] = useState(() => load().name || ''), on = load().speech
+  const [name, setName] = useState(''), [drink, setDrink] = useState<DrinkId>('bier'), [fetch, setFetch] = useState(''), [hold, setHold] = useState(''), [serve, setServe] = useState('')
+  const on = load().speech
   const bert = (t: string) => { setSaid(t); speak(t, on) }
   useEffect(() => {
     if (on) doorSound()
@@ -74,12 +112,17 @@ export default function Entrance({ onDone }: { onDone: () => void }) {
     return () => { clearTimeout(t); speechSynthesis?.cancel?.() }
   }, [])
   useEffect(() => { if (step !== 'done') return
-    const t = setTimeout(() => { const s = line('lady'); setSaid(''); setLady(s); speak(s, on, LADY, true) }, LADY_AT)
-    return () => clearTimeout(t) }, [step])
-  const giveName = (e: FormEvent) => { e.preventDefault(); const n = name.trim().slice(0, 20)
-    if (!n) return bert('Kom op, gewoon je naam, pikkie!')
-    save({ name: n }); setStep('drink'); bert(`Ah ${n}! Natuurlijk, Bert vergeet nooit een gezicht. Wat wil je drinken?`) }
-  const giveDrink = (d: DrinkId) => { save({ drink: d }); setStep('done'); bert(`Een ${DRINKS[d].label} voor ${name.trim()}! Dames, regel dat even.`) }
+    const sv = line('serve')
+    const ts = [
+      setTimeout(() => setFetch('fetch'), FETCH_AT),
+      setTimeout(() => setHold(DRINKS[drink].icon), FETCH_AT + AT_BAR),
+      setTimeout(() => { setSaid(''); setServe(sv); speak('Hihihihi!', on, GIGGLE, true); speak(sv, on, LADY, true) }, FETCH_AT + BACK),
+      setTimeout(() => { const s = line('lady'); setServe(''); setLady(s); speak(s, on, LADY, true) }, FETCH_AT + BACK + readTime(sv))]
+    return () => ts.forEach(clearTimeout) }, [step])
+  const giveName = (n: string) => {
+    if (!n) return bert('Kom op, gewoon je naam, swa!')
+    save({ name: n }); setName(n); setStep('drink'); bert(`Ah ${n}! Natuurlijk, Volgens mij heb ik je ma nog een keertje geketst op Zuidplein. Wat wil je sippen?`) }
+  const giveDrink = (d: DrinkId) => { save({ drink: d }); setDrink(d); setStep('done'); bert(`Een ${DRINKS[d].label} voor ${name}! Dames, fix dat.`) }
   return (
     <div className={`entrance ${step !== 'walk' ? 'here' : ''}`}>
       <div className="walk"><div className="sroom">
@@ -87,9 +130,10 @@ export default function Entrance({ onDone }: { onDone: () => void }) {
         <div className="scurtain l"/><div className="scurtain r"/>
         <Chandelier className="schand"/>
         <div className="court">
-          <Lady suit="#111" hair="#f2d16b" skin="#f1c9a5" delay={0}/>
+          <Bar/>
+          <Lady suit="#111" hair="#f2d16b" skin="#f1c9a5" delay={0} extra={fetch} hold={hold} said={serve}/>
           <Lady suit="#e0103c" hair="#2a160c" skin="#c98b5e" delay={-1.2} said={lady}/>
-          <SeatedBert mood={lady ? 'wow' : said ? 'win' : 'idle'} talking={!!said} said={said}/>
+          <SeatedBert mood={lady || serve ? 'wow' : said ? 'win' : 'idle'} talking={!!said} said={said}/>
           <Lady suit="#d4a017" hair="#7a1d0c" skin="#e8b48c" flip delay={-0.6}/>
           <Lady suit="#7b2f9e" hair="#111" skin="#8a5a3c" flip delay={-1.8}/>
         </div>
@@ -97,7 +141,7 @@ export default function Entrance({ onDone }: { onDone: () => void }) {
       </div></div>
       <div className="bigdoors"><div className="bd l"><i/></div><div className="bd r"><i/></div></div>
       {step !== 'walk' && <div className="arrive"><h2 className="logo">De kamer van <span>Bert</span></h2></div>}
-      {step === 'name' && <form className="ask" onSubmit={giveName}><input autoFocus maxLength={20} value={name} onChange={e => setName(e.target.value)} placeholder="Je naam" aria-label="Je naam"/><button className="btn spin">Dat ben ik</button></form>}
+      {step === 'name' && <NameForm onName={giveName}/>}
       {step === 'drink' && <div className="ask">{(Object.keys(DRINKS) as DrinkId[]).map(d => <button key={d} className="btn drink" onClick={() => giveDrink(d)}><span>{DRINKS[d].icon}</span>{DRINKS[d].label}</button>)}</div>}
       {step === 'done' && <button className="btn spin go" onClick={onDone}>🎰 Neem plaats aan de tafel</button>}
       {step === 'walk' && <button className="btn skip" onClick={onDone}>Overslaan ⏭</button>}
