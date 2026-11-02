@@ -16,7 +16,7 @@ body{background:radial-gradient(circle at 50% 0,#5a0f1c,#1a0509 70%),repeating-r
 .doorwrap{perspective:900px;margin:18px 0}.door{position:relative;display:block;margin:0 auto;width:min(280px,70vw);height:340px;background:#000;border:10px solid #d4a017;border-radius:140px 140px 0 0;cursor:pointer;overflow:hidden;color:#ffe9a8;font:inherit}
 .leaf{position:absolute;top:0;bottom:0;width:50%;background:repeating-linear-gradient(90deg,#4a1a0a 0 12px,#5a220e 12px 24px);border:2px solid #d4a017;transition:transform 1.5s cubic-bezier(.6,0,.2,1)}
 .l{left:0;transform-origin:left}.r{right:0;transform-origin:right}.opening .l{transform:rotateY(-105deg)}.opening .r{transform:rotateY(105deg)}
-.room-in{position:absolute;inset:0;display:grid;place-items:center;font-size:90px;background:radial-gradient(#0a7a3a,#02200f)}.door span{position:absolute;left:0;right:0;bottom:12px;z-index:2;background:#000c;padding:6px;font-weight:700}
+.room-in{position:absolute;inset:0;display:grid;place-items:center;font-size:90px;background:radial-gradient(#0a7a3a,#02200f)}.room-in img{width:100%;height:100%;object-fit:cover}.door span{position:absolute;left:0;right:0;bottom:12px;z-index:2;background:#000c;padding:6px;font-weight:700}
 .opening .door{transform:scale(1.6);transition:transform 1.6s}.opening{animation:fadeout 1.6s forwards}@keyframes fadeout{70%{opacity:1}100%{opacity:0}}.fade{animation:fin .9s}@keyframes fin{from{opacity:0}}
 .games{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}.game{border:1px dashed #d4a017;border-radius:10px;padding:12px;display:grid;opacity:.6;background:#0006}
 .player{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;margin:20px 0;padding:10px;border:1px solid #d4a01788;border-radius:10px;background:#0005}.fine{opacity:.6;font-size:.8rem}
@@ -31,3 +31,6 @@ body{background:radial-gradient(circle at 50% 0,#5a0f1c,#1a0509 70%),repeating-r
 .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:12px 0}.chip{width:54px;height:54px;border-radius:50%;border:4px dashed #fff;color:#fff;font:700 15px Georgia;cursor:pointer;box-shadow:0 3px 6px #000a}
 .c1{background:#888}.c5{background:#b3202e}.c10{background:#1d4fa3}.c25{background:#1b8a3a}.c50{background:#d9731a}.c100{background:#111}.c500{background:#7b2f9e}.chip.sel{outline:3px solid #ffe9a8;transform:translateY(-5px)}
 .hist{min-height:40px}@media(max-width:600px){.stage{flex-direction:column;align-items:center}.wheel{width:min(260px,70vw)}}
+/* Mobiel: themesong bovenaan, alleen een grote playknop */
+@media(max-width:600px){.home{display:flex;flex-direction:column}.home>.btn{align-self:center}.home .player{order:-1;margin:4px 0 14px;padding:0;border:0;background:none}
+.player .label{display:none}.player .play{width:100%;min-height:72px;font-size:1.6rem;font-weight:700;border-width:2px;border-radius:14px;box-shadow:0 0 18px #d4a01766}}

@@ -6,11 +6,6 @@ export const save = (s: Saved) => { try { localStorage.setItem(K, JSON.stringify
 /** Reset-regels op één plek aanpasbaar */
 export const resetState = (s: Saved): Saved => ({ ...s, balance: START, history: [] })
 
-// Themesong in IndexedDB
-const db = () => new Promise<IDBDatabase>((res, rej) => { const q = indexedDB.open('bc-audio', 1); q.onupgradeneeded = () => q.result.createObjectStore('f'); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error) })
-export async function songPut(f: File | null) { const d = await db(); const s = d.transaction('f', 'readwrite').objectStore('f'); f ? s.put(f, 'song') : s.delete('song') }
-export async function songGet(): Promise<File | null> { const d = await db(); return new Promise(r => { const q = d.transaction('f').objectStore('f').get('song'); q.onsuccess = () => r((q.result as File) || null); q.onerror = () => r(null) }) }
-
 // Spraak (Web Speech API). Later vervangbaar door audiobestanden.
 const LINES: Record<string, string[]> = {
   welcome: ['Awoo strijder! Kom maar met je saaf, a neef!', 'Bert ruikt geld! Welkom in BertsCasino!'],
@@ -21,9 +16,15 @@ const LINES: Record<string, string[]> = {
   lose: ['Helaas pindakaas, vriend!', 'Welloe voor jou swa!', 'Het huis wint, a neef. Weer eens wat anders!'],
   broke: ['Niks meer over? Reset maar, Bert gunt je.']
 }
-export const line = (k: string) => { const a = LINES[k]; return a[Math.floor(Math.random() * a.length)] }
+/** Stem van Bert: pitch 0–2 (lager = zwaarder), rate 0.1–10 (lager = trager) */
+const VOICE = { pitch: 0.35, rate: 0.8 }
+export const line =(k: string) => { const a = LINES[k]; return a[Math.floor(Math.random() * a.length)] }
 export function speak(text: string, on: boolean) {
   if (!on || !('speechSynthesis' in window)) return
-  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = 'nl-NL'; u.pitch = 0.6; u.rate = 1.0
-    const v = speechSynthesis.getVoices().find(x => x.lang.startsWith('nl')); if (v) u.voice = v; speechSynthesis.speak(u) } catch {}
+  try { speechSynthesis.cancel(); const v = speechSynthesis.getVoices().find(x => x.lang.startsWith('nl'))
+    // Oude-mannenstem: zwaar en wat trager. Faalt een stem op de lage toon, dan nog een keer met de standaardstem
+    const say = (t: string, pitch: number, rate: number, retry = true) => { const u = new SpeechSynthesisUtterance(t); u.lang = 'nl-NL'; u.pitch = pitch; u.rate = rate; if (v) u.voice = v
+      u.onerror = e => { if (retry && e.error !== 'interrupted' && e.error !== 'canceled') say(t, 1, 1, false) }; speechSynthesis.speak(u) }
+    // Chrome slaat speak() soms over als die direct na cancel() komt
+    setTimeout(() => { say(text, VOICE.pitch, VOICE.rate) }, 60) } catch {}
 }

@@ -14,10 +14,10 @@ export default function App() {
   if (route === 'roulette') return <div className="fade"><Roulette onExit={() => { location.hash = 'home' }} /></div>
   return (
     <div className={`home ${open ? 'opening' : ''}`}>
-      <h1 className="logo">Berts<span>Casino</span></h1><p className="gold">★ Exclusief • Decadent • Een tikkie fout ★</p>
+      <h1 className="logo">Berts<span>Casino</span></h1>
       <Bert mood="idle" talking={!!said} said={said || 'Welkom, a neef! Bert ruikt geld!'} />
       <button className="btn" onClick={() => { const t = line('welcome'); setSaid(t); speak(t, load().speech) }}>🎤 Laat Bert praten</button>
-      <div className="doorwrap"><button className="door" onClick={enter} aria-label="Roulette – Betreed de tafel"><div className="leaf l"/><div className="leaf r"/><div className="room-in">🎰</div><span>Roulette – Betreed de tafel</span></button></div>
+      <div className="doorwrap"><button className="door" onClick={enter} aria-label="Roulette – Betreed de tafel"><div className="leaf l"/><div className="leaf r"/><div className="room-in"><img src="./roulette-tafel.svg" alt="Roulettetafel" /></div><span>Roulette – Betreed de tafel</span></button></div>
       <div className="games">{GAMES.filter(g => !g.ready).map(g => <div key={g.id} className="game off"><b>{g.name}</b><small>{g.sub}</small></div>)}</div>
       <AudioPlayer />
       <p className="fine">Alleen virtueel speelgeld zonder echte waarde.</p>
