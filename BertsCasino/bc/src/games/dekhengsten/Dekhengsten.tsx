@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { DRINKS, load, save, speak } from '../../services'
+import { DRINKS, START, load, resetState, save, speak } from '../../services'
 import { cryptoRng } from '../../services/rng'
 import { hofText, submitScore } from '../../services/hof'
 import { sfx } from '../../services/music'
@@ -97,6 +97,7 @@ export default function Dekhengsten({ onExit }: { onExit: () => void }) {
   }
   const next = () => { setPhase('paddock'); setRace(null); setComment(null) }
 
+  const reset = () => { if (phase === 'race' || !confirm(`Alles terug naar ${eur(START)}?`)) return; const s = resetState(load()); setBal(s.balance); save(s) }
   const leroyIdx = HORSES.findIndex(h => h.id === 'leroy')
   return (
     <div className={`dh ph-${phase}`}>
@@ -104,7 +105,8 @@ export default function Dekhengsten({ onExit }: { onExit: () => void }) {
         <button className="btn" onClick={onExit} disabled={phase === 'race'}>← Beginscherm</button>
         <b className="gold">{init.name && <span className="who">{DRINKS[init.drink || 'bier'].icon} {init.name} · </span>}Saldo {eur(bal)}</b>
         <span><button className={`btn ${showHist ? 'on' : ''}`} onClick={() => setShowHist(!showHist)}>📜 Geschiedenis</button>
-          <button className="btn" onClick={() => setSpeech(!speech)}>{speech ? '🔊 Spraak aan' : '🔇 Spraak uit'}</button></span>
+          <button className="btn" onClick={() => setSpeech(!speech)}>{speech ? '🔊 Spraak aan' : '🔇 Spraak uit'}</button>
+          <button className="btn" onClick={reset} disabled={phase === 'race'}>Reset</button></span>
       </header>
       <h2 className="logo dh-title">DEKHENGSTEN <span>RACE</span></h2>
 
