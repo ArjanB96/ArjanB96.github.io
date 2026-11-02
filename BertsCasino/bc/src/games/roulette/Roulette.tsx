@@ -5,6 +5,7 @@ import Wheel from './Wheel'
 import { Bet, WHEEL, buildTargets, colorOf, payout, spinResult } from './logic'
 import { DRINKS, START, line, load, resetState, save, speak } from '../../services'
 import { sfx } from '../../services/music'
+import { hofText, submitScore } from '../../services/hof'
 
 const CHIPS = [1, 5, 10, 25, 50, 100, 500]
 /** Balletje: baan langs de rand, straal van de vakjes, vluchttijd uit Berts mond en rol-/stuitertijd (ms) */
@@ -89,6 +90,7 @@ export default function Roulette({ onExit }: { onExit: () => void }) {
           const back = placed.reduce((s, b) => s + payout(b, result), 0), n = back - total, nb = bal + n
           setBal(nb); setRes(result); setNet(n); setHist(h => [result, ...h].slice(0, 15)); setLast(placed); setBets({}); setStack([]); setBusy(false)
           say(n > 0 ? line('win') : nb < 1 ? line('broke') : line('lose'), n > 0 ? 'win' : n < 0 ? 'lose' : 'idle')
+          if (n > 0) submitScore('roulette', n, total).then(p => { if (p) setTimeout(() => say(hofText(p), 'win'), 2500) })
           return
         }
       }

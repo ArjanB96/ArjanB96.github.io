@@ -1,11 +1,11 @@
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 import SeatedBert from './Throne'
 import { Chandelier } from './Decor'
 import { WHEEL, colorOf } from '../games/roulette/logic'
 import { DRINKS, DrinkId, LADY, line, load, save, speak } from '../services'
 import { doorSound } from '../services/music'
 
-/** Entree: grote deuren gaan open, je loopt de kamer van Bert in, daarna pas naar de tafel */
+/** Entree van het casino: grote deuren gaan open, je loopt de kamer van Bert in, kiest naam en drankje en gaat dan het casino in */
 const ARRIVE = 3600
 /** Na het kiezen van je drankje (ms): meisje loopt naar de bar, pakt het, komt terug; daarna de 'bana'-opmerking */
 const FETCH_AT = 1500, AT_BAR = 1200, BACK = 3400
@@ -96,6 +96,7 @@ function NameForm({ onName }: { onName: (n: string) => void }) {
       <input autoFocus={desk} maxLength={20} value={v} onChange={e => setV(e.target.value)} placeholder="Je naam" aria-label="Je naam"
         autoCapitalize="words" autoComplete="nickname" autoCorrect="off" spellCheck={false} enterKeyHint="go"/>
       <button className="btn spin">Dat ben ik</button>
+      <small className="asknote">Je naam kan zichtbaar worden in de Hall of Fame.</small>
     </form>
   )
 }
@@ -106,9 +107,12 @@ export default function Entrance({ onDone }: { onDone: () => void }) {
   const [name, setName] = useState(''), [drink, setDrink] = useState<DrinkId>('bier'), [fetch, setFetch] = useState(''), [hold, setHold] = useState(''), [serve, setServe] = useState('')
   const on = load().speech
   const bert = (t: string) => { setSaid(t); speak(t, on) }
+  // Overslaan mag, maar zonder naam kom je het casino niet in (nodig voor de Hall of Fame)
+  const skipped = useRef(false)
+  const skip = () => { skipped.current = true; if (load().name) return onDone(); setStep('name'); bert(line('ask')) }
   useEffect(() => {
     if (on) doorSound()
-    const t = setTimeout(() => { setStep('name'); bert(line('ask')) }, ARRIVE)
+    const t = setTimeout(() => { if (!skipped.current) { setStep('name'); bert(line('ask')) } }, ARRIVE)
     return () => { clearTimeout(t); speechSynthesis?.cancel?.() }
   }, [])
   useEffect(() => { if (step !== 'done') return
@@ -143,8 +147,8 @@ export default function Entrance({ onDone }: { onDone: () => void }) {
       {step !== 'walk' && <div className="arrive"><h2 className="logo">De kamer van <span>Bert</span></h2></div>}
       {step === 'name' && <NameForm onName={giveName}/>}
       {step === 'drink' && <div className="ask">{(Object.keys(DRINKS) as DrinkId[]).map(d => <button key={d} className="btn drink" onClick={() => giveDrink(d)}><span>{DRINKS[d].icon}</span>{DRINKS[d].label}</button>)}</div>}
-      {step === 'done' && <button className="btn spin go" onClick={onDone}>🎰 Neem plaats aan de tafel</button>}
-      {step === 'walk' && <button className="btn skip" onClick={onDone}>Overslaan ⏭</button>}
+      {step === 'done' && <button className="btn spin go" onClick={onDone}>🎰 Betreed het casino</button>}
+      {step === 'walk' && <button className="btn skip" onClick={skip}>Overslaan ⏭</button>}
     </div>
   )
 }

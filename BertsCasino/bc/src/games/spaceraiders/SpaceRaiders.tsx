@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import Bert, { Mood } from '../../components/Bert'
 import { DRINKS, START, line, load, resetState, save, speak } from '../../services'
 import { musicOn, musicSet, sfx } from '../../services/music'
+import { hofText, submitScore } from '../../services/hof'
 import { CONFIG, PORTAL } from './engine/config'
 import { Crew, newCrew, progress } from './engine/crew'
 import { GameEvent, playRound } from './engine/engine'
@@ -100,6 +101,7 @@ export default function SpaceRaiders({ onExit }: { onExit: () => void }) {
     await play(round.events, round.total)
     if (!alive.current) return
     setBal(b => Math.round((b + round.total) * 100) / 100); setBusy(false)
+    if (round.total > 0) submitScore('space', round.total, bet).then(p => { if (p) setTimeout(() => say(hofText(p), 'win'), 2500) })
     if (round.total >= bet * 10) say(line('spaceBig'), 'win')
     else if (round.total > 0 && Math.random() < 0.3) say(line('spaceWin'), 'win')
   }

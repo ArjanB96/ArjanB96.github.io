@@ -4,6 +4,7 @@ import SeatedBert from '../../components/Throne'
 import { BETS, BOOM, FREE, H, MAX_WIN, METER, PAYS, RETRIGGER, SCALE, SYMS, Spin, W, WILD, cryptoRng, spin } from './logic'
 import { DRINKS, START, line, load, resetState, save, speak } from '../../services'
 import { sfx } from '../../services/music'
+import { hofText, submitScore } from '../../services/hof'
 
 /** Tijden (ms) van de animatie per cascade: invallen, oplichten van de winst, wegploffen, ontploffen */
 const DROP = 580, GLOW = 600, POP = 280, BLAST = 650
@@ -62,6 +63,7 @@ export default function Kluis({ onExit }: { onExit: () => void }) {
     total = cents(Math.min(total, MAX_WIN * bet)); setWin(total)
     if (!alive.current) return
     setBal(b => cents(b + total)); setBusy(false)
+    if (total > 0) submitScore('kluis', total, bet).then(p => { if (p) setTimeout(() => say(hofText(p), 'win'), 2500) })
     if (total >= bet * 20) say(line('kluisBig'), 'win')
     else if (total > 0 && Math.random() < 0.35) say(line('kluisWin'), 'win')
   }

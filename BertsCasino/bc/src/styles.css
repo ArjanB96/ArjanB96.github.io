@@ -131,3 +131,17 @@ body{background:#1a0509}
 .kinfo table{width:100%;border-collapse:collapse;text-align:center}.kinfo td,.kinfo th{padding:3px;border-bottom:1px solid #d4a01744}
 @media(max-width:600px){.kstage .seat{--seat:min(170px,48vw)}}
 @media(prefers-reduced-motion:reduce){.kc,.kc.glow,.kgrid.shake{animation:none}}
+/* Startscherm vóór het casino */
+.gate{position:relative;z-index:1;max-width:620px;margin:0 auto;padding:max(16px,env(safe-area-inset-top)) 16px max(90px,env(safe-area-inset-bottom));text-align:center}
+.gate .seat{margin-top:34px}.gate .bubble{position:relative;bottom:auto;left:auto;transform:none;margin:0 auto 12px;max-width:100%}
+.gate-acts{display:grid;justify-items:center;gap:8px;margin:18px 0}.gate-go{font-size:1.3rem;padding:16px 34px;animation:pulse 1.6s infinite}
+/* Hall of Fame */
+.hof{margin:22px auto;max-width:620px;padding:14px;border:2px solid #d4a017;border-radius:16px;background:#1a0509e0;box-shadow:0 0 24px #000a}
+.hof-title{font-size:clamp(1.6rem,6vw,2.4rem);margin:0 0 8px}.hof-tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:2px}
+.hof-msg{opacity:.8;font-style:italic}
+.hof-list{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:4px;text-align:left}
+.hof-list li{display:grid;grid-template-columns:34px minmax(0,1fr) auto;grid-template-areas:"r n a" "r n s";align-items:center;column-gap:8px;padding:6px 10px;border-radius:10px;background:#ffffff0d}
+.hof-list .rank{grid-area:r;font-weight:700;text-align:center;font-size:1.1rem}.hof-list .nm{grid-area:n;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#fff2a8}
+.hof-list .amt{grid-area:a;font-weight:700;color:#4f4;text-align:right}.hof-list small{grid-area:s;opacity:.7;text-align:right;font-size:.75rem}
+.hof-list li.p1{background:linear-gradient(90deg,#d4a01755,#ffffff0d)}.hof-list li.me{outline:2px solid #fff2a8}
+.asknote{flex-basis:100%;font-size:.75rem;opacity:.75}
