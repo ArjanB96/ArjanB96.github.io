@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { songGet, songPut } from '../services'
+/** Vast themesong voor iedereen: zet het bestand in public/themesong.mp3 */
+const DEFAULT = { url: './themesong.mp3', name: 'Themesong' }
 export default function AudioPlayer() {
   const a = useRef<HTMLAudioElement>(null)
   const [name, setName] = useState(''), [url, setUrl] = useState(''), [play, setPlay] = useState(false), [vol, setVol] = useState(0.3)
-  const set = (f: File | null) => { if (url) URL.revokeObjectURL(url); setUrl(f ? URL.createObjectURL(f) : ''); setName(f ? f.name : ''); setPlay(false) }
-  useEffect(() => { songGet().then(f => f && set(f)).catch(() => {}) }, [])
+  const set = (f: File | null) => { if (url.startsWith('blob:')) URL.revokeObjectURL(url); setUrl(f ? URL.createObjectURL(f) : DEFAULT.url); setName(f ? f.name : DEFAULT.name); setPlay(false) }
+  useEffect(() => { songGet().then(f => set(f)).catch(() => set(null)) }, [])
   useEffect(() => { if (a.current) a.current.volume = vol }, [vol, url])
   const toggle = () => { const e = a.current; if (!e || !url) return; if (e.paused) { e.play().then(() => setPlay(true)).catch(() => {}) } else { e.pause(); setPlay(false) } }
   return (

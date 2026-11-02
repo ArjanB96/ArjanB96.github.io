@@ -13,13 +13,13 @@ export async function songGet(): Promise<File | null> { const d = await db(); re
 
 // Spraak (Web Speech API). Later vervangbaar door audiobestanden.
 const LINES: Record<string, string[]> = {
-  welcome: ['Zo, daar zijn we weer! Kom maar met je inzet, a neef!', 'Bert ruikt geld! Welkom in BertsCasino!'],
+  welcome: ['Awoo strijder! Kom maar met je saaf, a neef!', 'Bert ruikt geld! Welkom in BertsCasino!'],
   idle: ['Kom op, die roulette gaat niet vanzelf draaien!', 'Niet zo gierig doen, gooi er nog wat op!', 'Pikkie, ik word er oud van hier!'],
   big: ['Oeeeeh, dat is een flinke, pikkie!', 'Bert gaat lekker vandaag! Gooi maar door!'],
-  close: ['Rien ne va plus! Dames en heren, de inzetten zijn gesloten!'],
-  win: ['Oeeeeh, dat was een mooie!', 'Lekker bezig, pikkie!', 'Kijk eens aan, een echte winnaar!'],
-  lose: ['Helaas pindakaas, vriend!', 'Bert heeft gesproken!', 'Het huis wint, a neef. Weer eens wat anders!'],
-  broke: ['Niks meer over? Reset maar, Bert is niet zo.']
+  close: ['De inzetten zijn gesloten boys, groetjes Bert!'],
+  win: ['Oeeeeh, dat wordt vanavond bori roken!', 'Lekker bezig, pikkie!', 'Siii maatje!'],
+  lose: ['Helaas pindakaas, vriend!', 'Welloe voor jou swa!', 'Het huis wint, a neef. Weer eens wat anders!'],
+  broke: ['Niks meer over? Reset maar, Bert gunt je.']
 }
 export const line = (k: string) => { const a = LINES[k]; return a[Math.floor(Math.random() * a.length)] }
 export function speak(text: string, on: boolean) {
