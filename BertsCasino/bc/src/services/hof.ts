@@ -6,8 +6,8 @@ const URL = 'https://aafgzlymoezufqlntfqv.supabase.co/rest/v1'
 const KEY = 'sb_publishable_ap7AfYqOylfNOU3suC5ZwQ_zsJbmZ59'
 const HEADERS = { apikey: KEY, 'Content-Type': 'application/json' }
 
-export type GameId = 'roulette' | 'kluis' | 'space'
-export const GAME_NAMES: Record<GameId, string> = { roulette: '🎰 Roulette', kluis: '🧨 Berts Kluis', space: '🚀 Space Raiders' }
+export type GameId = 'roulette' | 'kluis' | 'space' | 'race'
+export const GAME_NAMES: Record<GameId, string> = { roulette: '🎰 Roulette', kluis: '🧨 Berts Kluis', space: '🚀 Space Raiders', race: '🐎 Dekhengsten Race' }
 export interface Score { name: string; amount: number; bet: number; created_at: string }
 
 /** Top 10 per spel, 60 seconden in het geheugen zodat niet elke ronde opnieuw wordt opgehaald */

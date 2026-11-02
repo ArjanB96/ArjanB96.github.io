@@ -1,0 +1,138 @@
+/* DEKHENGSTEN RACE — eigen module-stijl */
+.dh{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:max(10px,env(safe-area-inset-top)) 14px max(90px,env(safe-area-inset-bottom));text-align:center}
+.dh-title{font-size:clamp(1.9rem,7vw,3.6rem);margin:.25em 0 0;letter-spacing:.04em}.dh-title span{color:#fff2a8}
+.dh-sub{margin:.2em 0 .8em;opacity:.85;font-style:italic}
+.dh-explain{max-width:720px;margin:0 auto 12px;padding:8px 12px;border-radius:12px;background:#1a0509cc;border:1px solid #d4a01788;font-size:.92rem}
+
+/* Paarden-art en animaties */
+.horse{display:block;width:100%;overflow:visible}
+.horse .leg{animation:none}
+.runner .horse .bl1,.runner .horse .fl2{animation:gallopA var(--gait,.4s) linear infinite}
+.runner .horse .bl2,.runner .horse .fl1{animation:gallopB var(--gait,.4s) linear infinite}
+.runner .horse{animation:bob var(--gait,.4s) ease-in-out infinite}
+.runner .tail,.runner .mane{animation:flow var(--gait,.4s) ease-in-out infinite alternate}
+.runner .jockey{animation:jock var(--gait,.4s) ease-in-out infinite}
+@keyframes gallopA{0%,100%{transform:rotate(28deg)}50%{transform:rotate(-26deg)}}
+@keyframes gallopB{0%,100%{transform:rotate(-26deg)}50%{transform:rotate(28deg)}}
+@keyframes bob{50%{transform:translateY(-4%)}}@keyframes flow{to{transform:rotate(-12deg)}}@keyframes jock{50%{transform:translateY(-3px) rotate(-4deg)}}
+/* Leroy: rookt, schudt met zijn hoofd, heeft last van zijn heup */
+.h-leroy .smoke circle{opacity:0;animation:puff 4.5s infinite}.h-leroy .smoke circle:nth-child(2){animation-delay:.35s}.h-leroy .smoke circle:nth-child(3){animation-delay:.7s}
+@keyframes puff{0%,62%{opacity:0;transform:translate(0,0)}70%{opacity:.75}100%{opacity:0;transform:translate(6px,-14px)}}
+.h-leroy .ember{animation:emb 4.5s infinite}@keyframes emb{0%,55%,75%,100%{fill:#ff6a00}62%{fill:#fff36a}}
+.hcard .h-leroy,.pod .h-leroy{animation:leroyIdle 7s ease-in-out infinite;transform-origin:60% 80%}
+@keyframes leroyIdle{0%,30%,100%{transform:none}34%{transform:rotate(-3deg)}38%{transform:rotate(3deg)}42%{transform:rotate(-2deg)}46%{transform:none}70%{transform:translateY(2px) rotate(2deg)}76%{transform:none}}
+.runner:has(.h-leroy) .horse{animation:bob var(--gait,.4s) ease-in-out infinite,stiff 5s ease-in-out infinite}
+@keyframes stiff{0%,80%,100%{rotate:0deg}85%{rotate:-4deg}90%{rotate:2deg}}
+
+/* Paddock */
+.paddock{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.hcard{position:relative;display:grid;gap:4px;padding:10px 12px 12px;text-align:left;font:inherit;color:inherit;cursor:pointer;border-radius:16px;border:2px solid #d4a01766;
+  background:linear-gradient(160deg,#2a0a12f2,#12040af2);box-shadow:0 6px 18px #000a;transition:transform .2s,border-color .2s,box-shadow .2s}
+.hcard:hover{transform:translateY(-3px)}.hcard.sel{border-color:#fff2a8;box-shadow:0 0 0 3px var(--silks),0 0 26px #d4a01788}
+.hcard-art{height:120px;display:grid;place-items:center;border-radius:12px;background:radial-gradient(ellipse at 50% 90%,#0a5c2e,#06200f 70%);overflow:hidden}
+.hcard-art .horse{width:min(220px,90%)}
+.hcard-head{display:flex;align-items:center;gap:8px}.hcard-head b{flex:1;font-size:1.1rem;color:#fff2a8}
+.hno,.lane-no,.standings i{display:inline-grid;place-items:center;min-width:26px;height:26px;border-radius:50%;background:var(--silks);color:#fff;font-weight:700;font-style:normal;border:2px solid #fff8}
+.hodds{font:700 1.5rem Georgia,serif;color:#ffd36a;text-shadow:0 0 10px #d4a01788}
+.hchance{font-size:.8rem;opacity:.8;margin-top:-4px}
+.hbadge{position:absolute;top:8px;right:8px;z-index:2;padding:2px 8px;border-radius:8px;font:700 .7rem Georgia,serif;letter-spacing:.05em}
+.hbadge.fav{background:#d4a017;color:#2a0a0e}.hbadge.out{background:#9b30c9;color:#fff}
+.hstats{display:grid;gap:3px}.hstat{display:grid;grid-template-columns:130px 1fr;align-items:center;gap:6px;font-size:.75rem}
+.hstat i{height:7px;border-radius:4px;background:#0008;overflow:hidden}.hstat b{display:block;height:100%;background:linear-gradient(90deg,#7a5a05,#ffd36a)}
+.htrait{margin:4px 0 0;font-size:.82rem;color:#fff2a8}.hblurb{margin:0;font-size:.78rem;opacity:.8;font-style:italic}
+
+/* Inzetpaneel */
+.betpanel{position:sticky;bottom:max(8px,env(safe-area-inset-bottom));z-index:5;max-width:560px;margin:14px auto 0;padding:12px 14px;display:grid;gap:6px;border-radius:16px;
+  border:2px solid #d4a017;background:#1a0509f5;box-shadow:0 -6px 30px #000c}
+.bp-row{display:flex;justify-content:space-between;align-items:center;gap:8px}.bp-row.big b{font-size:1.4rem}
+.bp-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}.bp-chips .chip{width:48px;height:48px;font-size:.85rem}
+.bp-stake{display:flex;align-items:center;gap:6px;font-size:1.2rem}.bp-go{width:100%;min-height:54px;font-size:1.1rem}
+
+/* Renbaan */
+.dh-race{position:relative;--lane:clamp(46px,7.5vw,70px)}
+.stands{position:relative;height:clamp(110px,18vw,170px);border-radius:16px 16px 0 0;overflow:hidden;border:3px solid #d4a017;border-bottom:0;
+  background:linear-gradient(#1a0509 0,#3b0a14 55%,transparent 55%),url(../../assets/panter.svg) 0 0/150px}
+/* Tribune met publiek (SVG); groepjes juichen om de beurt, tijdens de race harder */
+.grandstand{position:absolute;left:0;top:0;bottom:0;width:72%;height:100%}
+.fan{animation:fan 1.6s ease-in-out infinite}.fan.g1{animation-delay:-.3s}.fan.g2{animation-delay:-.65s}.fan.g3{animation-delay:-1s}.fan.g4{animation-delay:-1.3s}
+@keyframes fan{50%{translate:0 -2px}}
+.fan .arms{animation:arms 1.2s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}.fan.g2 .arms,.fan.g4 .arms{animation-delay:-.6s}
+@keyframes arms{50%{transform:scaleY(.8) rotate(4deg)}}
+.dh.ph-race .fan{animation-duration:.55s}.dh.ph-race .fan .arms{animation-duration:.45s}
+.floodlight{animation:flood 3s ease-in-out infinite alternate}@keyframes flood{to{opacity:.6}}
+.lambo{position:absolute;left:-15%;top:2%;font-size:2rem;opacity:0}.lambo.go{animation:lambo 2s linear}
+@keyframes lambo{0%{opacity:1;left:-15%}100%{opacity:1;left:75%}}
+.track{position:relative;padding:14px 0 4px;border:3px solid #d4a017;border-top:4px solid #fff2a8;border-radius:0 0 16px 16px;overflow:hidden;
+  background:repeating-linear-gradient(#0e6a34 0 calc(var(--lane)),#0b5a2c calc(var(--lane)) calc(var(--lane)*2));box-shadow:0 10px 30px #000c}
+.lane{position:relative;height:var(--lane);border-bottom:2px dashed #ffffff40}
+.lane-no{position:absolute;left:4px;top:50%;transform:translateY(-50%);z-index:3;min-width:22px;height:22px;font-size:.75rem}
+.startline{position:absolute;top:0;bottom:0;left:calc(6% + var(--lane)*.4);width:4px;background:#fff}
+.finishline{position:absolute;top:0;bottom:0;left:calc(90% + var(--lane)*.85);width:16px;background:repeating-conic-gradient(#fff 0 25%,#111 0 50%) 0 0/8px 8px;z-index:1}
+.finishline span{position:absolute;top:2px;left:50%;transform:translateX(-50%) rotate(90deg);transform-origin:center;white-space:nowrap;font:700 .6rem Georgia;color:#d4a017;text-shadow:0 0 3px #000}
+.sgate{position:absolute;left:calc(6% - 6px);top:3px;bottom:3px;width:calc(var(--lane)*1.75);z-index:4;border:3px solid #d4a017;border-radius:6px;
+  background:repeating-linear-gradient(90deg,#d4a01799 0 4px,transparent 4px 12px);transform-origin:top;transition:transform .5s cubic-bezier(.5,0,.3,1),opacity .5s}
+.track.open .sgate{transform:scaleY(0);opacity:0}
+.runner{position:absolute;bottom:2px;width:calc(var(--lane)*1.6);transform:translateX(-10%);z-index:2;will-change:left}
+.runner.mine::after{content:'JIJ';position:absolute;left:0;top:-4px;padding:0 4px;border-radius:4px;background:#fff2a8;color:#2a0a0e;font:700 .55rem Georgia}
+.runner.lead::before{content:'👑';position:absolute;right:28%;top:-12px;font-size:.9rem;z-index:3}
+.runner.ev-stumble .horse,.runner.ev-limp .horse{rotate:12deg}.runner.ev-spin .horse{animation:wobble .5s infinite}
+.runner.ev-graze .horse{rotate:18deg;translate:0 8%}.runner.ev-shy .horse{rotate:-10deg}.runner.ev-slow .horse{filter:grayscale(.4)}
+.runner.ev-boost .horse{filter:drop-shadow(-10px 0 6px #ffd36a)}
+@keyframes wobble{50%{transform:rotate(-14deg) scaleX(-1)}}
+.evtag,.shout{position:absolute;left:50%;bottom:90%;transform:translateX(-50%);z-index:6;white-space:nowrap;padding:1px 6px;border-radius:8px;font-size:.7rem;font-weight:700;background:#000c;color:#fff2a8;animation:fin .25s;pointer-events:none}
+.shout{bottom:112%;padding:3px 8px;background:#fff4d6;color:#2a0a0e;border:2px solid #c9781a;font-size:.78rem;font-style:italic}
+.countdown{position:absolute;inset:0;z-index:8;display:grid;place-items:center;font:700 clamp(3rem,14vw,7rem) Georgia,serif;color:#fff2a8;text-shadow:0 0 30px #d4a017,4px 4px #000;animation:count 1s ease-out}
+@keyframes count{from{transform:scale(2);opacity:0}}
+.standings{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;margin-top:8px}
+.standings span{display:flex;align-items:center;gap:4px;padding:3px 8px 3px 4px;border-radius:14px;background:#1a0509e6;border:1px solid #d4a01755;font-size:.8rem;transition:order .2s}
+.standings span.mine{border-color:#fff2a8;box-shadow:0 0 8px #fff2a8}.standings i{min-width:20px;height:20px;font-size:.7rem}
+.ticker{margin-top:6px;padding:6px 10px;border-radius:12px;background:#000c;border:1px solid #d4a017;font-weight:700;color:#fff2a8;animation:fin .3s}
+
+/* Bert in zijn commentatorhokje */
+.booth{position:absolute;right:8px;top:6px;bottom:6px;width:26%;max-width:230px;display:flex;align-items:flex-end;justify-content:center;transform-origin:50% 100%}
+.booth-bert{position:relative;width:72%;max-width:120px;margin-bottom:22px}.booth-bert .bert{width:100%;margin:0}
+.mic{position:absolute;bottom:34%;left:16%;width:16%;max-width:28px;transform:rotate(-18deg);transform-origin:50% 100%}
+.booth-desk{position:absolute;left:0;right:0;bottom:0;height:28px;display:grid;place-items:center;border-radius:8px;background:linear-gradient(#fff2a8,#d4a017 50%,#7a5a05);border:2px solid #7a5a05;font:700 .65rem Georgia;color:#5a0f1c;letter-spacing:.08em}
+.booth-say{position:absolute;right:104%;top:6px;width:max-content;max-width:min(320px,52vw);padding:6px 10px;border-radius:12px;background:#fff4d6;color:#2a0a0e;border:2px solid #d4a017;font-size:.82rem;font-style:italic;text-align:left;animation:fin .25s;z-index:5}
+.cue-hype .booth-bert,.cue-jump .booth-bert{animation:hop .45s ease-out 2}.cue-lean .booth-bert{transform:translateX(-8%) rotate(-6deg);transition:transform .3s}
+.cue-slam{animation:slam .3s 3}.cue-shock .booth-bert{transform:rotate(8deg) translateY(4px);transition:transform .2s}.cue-laugh .booth-bert{animation:laugh .25s 6}
+.cue-drink .booth-bert{transform:rotate(-5deg);transition:transform .6s}.cue-sad .booth-bert{transform:rotate(16deg) translateY(10%);transition:transform .8s}
+.cue-hype .mic,.cue-jump .mic{animation:wave .4s ease-in-out 3}
+@keyframes hop{50%{transform:translateY(-22%) scale(1.04)}}@keyframes slam{50%{transform:translateY(3px)}}@keyframes laugh{50%{transform:rotate(-4deg)}}@keyframes wave{50%{transform:rotate(-50deg)}}
+
+/* Winnaarsceremonie */
+.dh-win{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:12px;overflow:auto;background:radial-gradient(circle,#3b0a14ee,#0a0204f5);animation:fin .4s}
+.dh-win-card{position:relative;width:min(560px,96vw);padding:16px;border-radius:20px;border:3px solid #d4a017;background:linear-gradient(#2a0a12,#12040a);box-shadow:0 0 60px #d4a01766}
+.dh-win-card .logo{font-size:clamp(1.8rem,7vw,2.8rem);margin:.1em 0}
+.dh-special{margin:0 0 6px;font-weight:700;color:#ffd36a}
+.podium{display:grid;grid-template-columns:1fr 1.2fr 1fr;align-items:end;gap:6px;margin:30px 0 6px}
+.pod{display:grid;justify-items:center}.pod-art{width:100%}.pod small{font-size:.72rem}
+.pod-block{width:100%;display:grid;place-items:center;font:700 1.4rem Georgia;color:#2a0a0e;background:linear-gradient(#fff2a8,#d4a017);border-radius:8px 8px 0 0}
+.pod.p1 .pod-block{height:64px}.pod.p2 .pod-block{height:44px;background:linear-gradient(#f0f0f0,#a8a8a8)}.pod.p3 .pod-block{height:30px;background:linear-gradient(#f5c49a,#a0622e)}
+.pod.p1 .pod-art{animation:hop .7s ease-in-out infinite}
+.dh-order{margin:6px 0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;text-align:left;font-size:.82rem}
+.dh-order li{display:flex;gap:4px}.dh-order span{margin-left:auto;opacity:.7}
+.dh-result{margin:8px 0;padding:8px;border-radius:10px;font-weight:700}.dh-result.won{background:#0b5a2c;border:2px solid #8dffa6}.dh-result.lost{background:#3b0a14;border:2px solid #f66}
+.dh-win .booth{position:relative;right:auto;top:auto;bottom:auto;width:100%;max-width:none;height:150px;margin:4px 0}
+.dh-win .booth-say{right:auto;left:56%;top:0;max-width:42%}.dh-win .booth-bert{width:110px}.dh-win .mic{left:calc(50% - 62px);width:22px}
+.dh-next{width:100%;min-height:52px;font-size:1.1rem}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.confetti i{position:absolute;top:-20px;width:9px;height:14px;border-radius:2px;animation:fall 3.2s linear infinite}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+
+/* Geschiedenis */
+.dh-hist{max-width:720px;margin:0 auto 12px;padding:10px 14px;border-radius:14px;background:#1a0509f0;border:1px solid #d4a017;text-align:left}
+.dh-hist h3{margin:.2em 0 .4em;color:#ffd36a}.dh-hist ul{list-style:none;margin:0;padding:0;display:grid;gap:3px;max-height:260px;overflow:auto}
+.dh-hist li{display:flex;flex-wrap:wrap;gap:4px 10px;padding:4px 8px;border-radius:8px;background:#ffffff0d;font-size:.82rem}.dh-hist li b:last-child{margin-left:auto}
+
+/* Mobiel */
+@media(max-width:700px){
+  .paddock{grid-template-columns:1fr 1fr;gap:8px}
+  .hcard{padding:8px}.hcard-art{height:84px}.hcard-head b{font-size:.92rem}.hodds{font-size:1.2rem}
+  .hstat{grid-template-columns:1fr;gap:1px;font-size:.66rem}.hblurb{display:none}.htrait{font-size:.72rem}
+  .stands{height:150px}.booth{width:36%}.booth-bert{width:84%}.booth-say{max-width:58vw;font-size:.74rem}
+  .betpanel{bottom:calc(max(8px,env(safe-area-inset-bottom)) + 58px)}
+  .evtag{font-size:.6rem}.shout{font-size:.68rem}
+}
+@media(max-width:420px){.paddock{grid-template-columns:1fr}.hcard{grid-template-columns:110px 1fr;column-gap:10px}.hcard-art{grid-row:span 5;height:auto}}
+@media(prefers-reduced-motion:reduce){.fan,.fan .arms,.floodlight,.confetti i,.pod.p1 .pod-art,.hcard .h-leroy{animation:none}}
